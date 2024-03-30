@@ -40,6 +40,7 @@ sum_sample = np.zeros((MS, IS))
 # cluster_labels, cluster_methods = apply_dbscan_clustering(demand_process, 5)
 # cluster_labels, cluster_methods = apply_som_clustering(demand)
 cluster_labels, cluster_methods = apply_som_clustering(demand)
+num_unique_labels = len(np.unique(cluster_labels))
 
 # demand_transformed, _, _ = apply_pca(demand, 3)
 demand_transformed, _, _ = apply_tsne(demand, 3)
@@ -48,7 +49,7 @@ samples_info = []
 
 for m in range(MS):
     # cluster_num = SS_SAA
-    cluster_num = len(cluster_labels)
+    cluster_num = num_unique_labels
     
     sample, sample_methods = stratified_random_sampling(demand, cluster_labels, cluster_num, IS)
     # sample, sample_methods = simple_random_sampling(cluster_labels)
