@@ -6,6 +6,67 @@ import config
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+
+def read_data(filename=config.Input_file):
+    """
+    Reads data from an Excel file and returns parameters and data arrays.
+
+    Parameters:
+        filename (str): Name of the Excel file.
+
+    Returns:
+        tuple: CF, U, H, V, CP, CH, G, CT, D, pr, demand
+    """
+    IS = config.IS
+    AS = config.AS
+    NS = config.NS
+    Food = config.Food
+    Medicine = config.Medicine
+
+    scenario_sheet_name = f'scenario_{IS}'
+    probability_column_name = f'w{NS // 100}'
+
+    scenario_data = pd.read_excel(filename, scenario_sheet_name)
+    main_data = pd.read_excel(filename, 'main_data', header=None)
+
+    # probability
+    pr = scenario_data[probability_column_name].to_numpy()
+
+    # demand
+    demand = scenario_data.iloc[:NS, 1:IS + 1].to_numpy()
+    demand = np.rint(demand * 0.03)
+    Dr = np.empty((NS, IS, AS))
+    Dr[:, :, 0] = scenario_data.iloc[:NS, 1:IS + 1].to_numpy()
+    Dr[:, :, 1] = np.rint((Dr[:, :, 0] * Food))
+    Dr[:, :, 2] = np.rint((Dr[:, :, 0] * Medicine))
+
+    # Fixed cost, Storage capacity, volume of items
+    CF = main_data.loc[1, 1:3].to_numpy()
+    U = main_data.loc[2, 1:3].to_numpy()
+
+    # Distance
+    H = main_data.loc[8:(7 + IS), 1:].to_numpy()
+
+    # volume of items
+    V = main_data.loc[1, 6:8].to_numpy()
+    # Unit procurement price
+    CP = main_data.loc[2, 6:8].to_numpy()
+    # Unit transportation cost
+    CT = main_data.loc[3, 6:8].to_numpy()
+    # Unit holding cost
+    CH = main_data.loc[4, 6:8].to_numpy()
+    # Unit penalty cost
+    G = main_data.loc[5, 6:8].to_numpy()
+
+    D = np.zeros((NS, AS, IS))
+    for j in range(IS):
+        for a in range(AS):
+            for s in range(NS):
+                D[s, a, j] = np.rint(Dr[s, j, a] * 0.03)
+
+    return CF, U, H, V, CP, CH, G, CT, D, pr, demand
 
 def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None ,index=False ,header=False , **to_excel_kwargs):
     """
@@ -117,7 +178,6 @@ def save_and_print_results(script_name, IS, NS, MS, SS_SAA, opt_f, elapsed_time)
     print(f"Costs: {float(opt_f)}")
     print(f"Elapsed time: {elapsed_time} seconds.")
 
-
 def plot_cluster_sampling(demand_transformed, cluster_labels, sample, save_directory, script_name, m):
     
     # 绘制聚类结果和分层采样的样本点
@@ -145,6 +205,59 @@ def plot_cluster_sampling(demand_transformed, cluster_labels, sample, save_direc
     plt.ylabel('PCA Feature 2')
     plt.legend()
 
+    # 检查保存目录是否存在，如果不存在则创建
+    if not os.path.exists(save_directory):
+        os.makedirs(save_directory)
+
     # 保存图片到指定目录
     plt.savefig(os.path.join(save_directory, f'{script_name}_sample_{m+1}.jpg'), format='jpg')
     # plt.close()  # 关闭图形界面，防止内存泄露
+
+def plot_cluster_3d_sampling(demand_transformed, cluster_labels, sample, save_directory, script_name, m):
+    # 创建一个新的图和一个三维轴
+    fig = plt.figure(figsize=(10, 8), dpi=300)
+    ax = fig.add_subplot(111, projection='3d')
+
+    # 绘制聚类结果的散点图
+    for i, label in enumerate(np.unique(cluster_labels)):
+        ax.scatter(
+            demand_transformed[cluster_labels == label, 0],  # x轴坐标
+            demand_transformed[cluster_labels == label, 1],  # y轴坐标
+            demand_transformed[cluster_labels == label, 2],  # z轴坐标
+            label=f'Cluster {i}'
+        )
+
+    # 假设sample包含了所有采样点的索引
+    for s in sample:
+        ax.scatter(
+            demand_transformed[s, 0],  # x轴坐标
+            demand_transformed[s, 1],  # y轴坐标
+            demand_transformed[s, 2],  # z轴坐标
+            c='red',  # 标记颜色
+            edgecolor='k',
+            marker='x',  # 标记样式
+            s=100  # 设置标记大小为100 point^
+        )
+
+    # 设置图表标题和坐标轴标签
+    ax.set_title('Stratified Sampling of Clusters')
+    ax.set_xlabel('TSNE Feature 1')
+    ax.set_ylabel('TSNE Feature 2')
+    ax.set_zlabel('TSNE Feature 3')
+
+    # 设置视角
+    ax.view_init(elev=20., azim=45)  # 设置斜视图
+
+    # 显示图例
+    ax.legend()
+
+    # 检查保存目录是否存在，如果不存在则创建
+    if not os.path.exists(save_directory):
+        os.makedirs(save_directory)
+
+    # 保存图片到指定目录
+    # save_path = os.path.join(save_directory, f'{script_name}_sample_3D_{m+1}.jpg')
+    # plt.savefig(save_path, format='jpg')
+    plt.savefig(os.path.join(save_directory, f'{script_name}_sample_3D_{m+1}.jpg'), format='jpg')
+    # plt.close()  # 关闭图形界面，防止内存泄露
+    # print(f"Saved plot as {save_path}")

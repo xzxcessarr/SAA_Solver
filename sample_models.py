@@ -52,8 +52,6 @@ def stratified_random_sampling(demand, cluster_labels, SS_SAA, IS):
             for j in range(pick_num):
                 sample.append(cluster_each[temp[j]])
     return sample
-          
-
     
 def simple_random_sampling(cluster_labels):
     # randomly select one from each group

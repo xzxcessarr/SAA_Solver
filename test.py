@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-script_name = 'PCA_Stratified_kmeans++'
+# script_name = 'PCA_Stratified_kmeans++'
 
 import pandas as pd
 import numpy as np
 import time
 from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA  # Import PCA module
 import config  # Importing the parameters and data reading method from config.py
 from plugins import *
 from solve_models import *
 from data_preprocess import *
 from sample_models import *
+
+script_name = config.script_name
 
 tic = time.perf_counter()
 print('define set ...\n')
@@ -26,9 +27,9 @@ SS_SAA = config.SS_SAA
 print('define parameters ...\n')
 
 # Read data using the method from config.py
-CF, U, H, V, CP, CH, G, CT, D, pr, demand = config.read_data()
+CF, U, H, V, CP, CH, G, CT, D, pr, demand = read_data()
 
-demand_process=apply_pca(demand, 0.99)
+demand_process, demand_process_components=apply_pca(demand, 0.99)
 
 # to store variables
 ff = np.zeros((MS, 1))
@@ -43,7 +44,8 @@ sum_sample = np.zeros((MS, IS))
 
 cluster = KMeans(n_clusters=SS_SAA, init='k-means++', random_state=0).fit(demand_process)
 
-demand_transformed = apply_pca(demand, 2)
+# demand_transformed, _ = apply_pca(demand, 2)
+demand_transformed=apply_tsne(demand, 3)
 
 # solving sample problem
 for m in range(MS):
@@ -77,7 +79,8 @@ for m in range(MS):
     xx[:, :, m] = np.round(Vx1)
     yy[:, :, m] = np.round(Vy1)
 
-    plot_cluster_sampling(demand_transformed, cluster.labels_, sample, config.Graphs_sample_save_directory, script_name, m)
+    # plot_cluster_sampling(demand_transformed, cluster.labels_, sample, config.Graphs_sample_save_directory, script_name, m)
+    plot_cluster_3d_sampling(demand_transformed, cluster.labels_, sample, config.Graphs_sample_save_directory, script_name, m)
 
 # solving original problem
 
@@ -127,5 +130,6 @@ elapsed_time = toc - tic
 elapsed_time_df = pd.DataFrame([['Elapsed time', elapsed_time]], columns=['Metric', 'Value'])
 
 save_and_print_results(script_name, config.IS, config.NS, config.MS, config.SS_SAA, opt_f, elapsed_time)
+print(demand_process_components)
 
 
