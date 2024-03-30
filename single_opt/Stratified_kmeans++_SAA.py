@@ -5,11 +5,8 @@ import pandas as pd
 import numpy as np
 import time
 from sklearn.cluster import KMeans
-from plugins import append_df_to_excel
-from plugins import save_and_print_results
-from plugins import save_detailed_results
-from solve_models import getsol
-from solve_models import renew
+from plugins import *
+from solve_models import *
 import config  # Importing the parameters and data reading method from config.py
 
 tic = time.perf_counter()
@@ -26,7 +23,7 @@ SS_SAA = config.SS_SAA
 print('define parameters ...\n')
 
 # Read data using the method from config.py
-CF, U, H, V, CP, CH, G, CT, D, pr, demand = config.read_data()
+CF, U, H, V, CP, CH, G, CT, D, pr, demand = read_data()
 
 # to store variables
 ff = np.zeros((MS, 1))
@@ -163,15 +160,16 @@ elapsed_time_df = pd.DataFrame([['Elapsed time', elapsed_time]], columns=['Metri
 #     sheet_name='result'
 # )
 
-save_and_print_results(script_name, config.IS, config.NS, opt_f, elapsed_time)
+save_and_print_results(script_name, config.IS, config.NS, config.MS, config.SS_SAA, opt_f, elapsed_time)
 
-save_detailed_results(
-    script_name=script_name,
-    Vx=Vx,
-    Vy=Vy,
-    elapsed_time=elapsed_time,
-    start_row=1,
-    sheet_name='detailed'
-)
+
+# save_detailed_results(
+#     script_name=script_name,
+#     Vx=Vx,
+#     Vy=Vy,
+#     elapsed_time=elapsed_time,
+#     start_row=1,
+#     sheet_name='detailed'
+# )
 
 

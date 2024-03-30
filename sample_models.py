@@ -3,11 +3,11 @@ import numpy as np
 # # 需要的输入数据
 # demand = ...  # 需求数据，假设是一个NumPy数组
 # cluster_labels = ...  # KMeans聚类的结果标签数组
-# SS_SAA = ...  # 分层抽样的层数
+# cluster_num = ...  # 分层抽样的层数
 # IS = ...  # 需求数据的维度
 
 # # 分层随机抽样
-# stratified_sample_indices = stratified_random_sampling(demand, cluster_labels, SS_SAA, IS)
+# stratified_sample_indices = stratified_random_sampling(demand, cluster_labels, cluster_num, IS)
 
 # # 简单随机抽样
 # simple_sample_indices = simple_random_sampling(cluster_labels)
@@ -16,12 +16,12 @@ import numpy as np
 # stratified_demand_sample = demand[stratified_sample_indices, :]
 # simple_demand_sample = demand[simple_sample_indices, :]
 
-def stratified_random_sampling(demand, cluster_labels, SS_SAA, IS):
-        #Stratified random sampling
+def stratified_random_sampling(demand, cluster_labels, cluster_num, IS):
+    #Stratified random sampling
     sample = []
 
-    standard = np.zeros((SS_SAA, 1))
-    temp_num = np.zeros((SS_SAA, 1))
+    standard = np.zeros((cluster_num, 1))
+    temp_num = np.zeros((cluster_num, 1))
     for i in np.unique(cluster_labels):
         cluster_each = np.argwhere(cluster_labels == i)
         cluster_each = cluster_each.reshape(1, -1).squeeze(0).tolist()
@@ -39,7 +39,7 @@ def stratified_random_sampling(demand, cluster_labels, SS_SAA, IS):
     for i in np.unique(cluster_labels):
         cluster_each = np.argwhere(cluster_labels == i)
         cluster_each = cluster_each.reshape(1, -1).squeeze(0).tolist()
-        pick_num = np.rint(SS_SAA * len(cluster_each) * standard[i] / sum(temp_num))
+        pick_num = np.rint(cluster_num * len(cluster_each) * standard[i] / sum(temp_num))
         pick_num = pick_num.astype(np.int32)[0]
 
         if pick_num == 0:
@@ -51,7 +51,7 @@ def stratified_random_sampling(demand, cluster_labels, SS_SAA, IS):
             temp = np.random.choice(len(cluster_each), pick_num, replace=False)
             for j in range(pick_num):
                 sample.append(cluster_each[temp[j]])
-    return sample
+    return sample, "Stratified"
     
 def simple_random_sampling(cluster_labels):
     # randomly select one from each group
@@ -61,4 +61,4 @@ def simple_random_sampling(cluster_labels):
         cluster_each = cluster_each.reshape(1, -1).squeeze(0).tolist()
         temp = np.random.choice(len(cluster_each), 1, replace=False)
         sample.append(cluster_each[temp[0]]) 
-    return sample
+    return sample, "Simple"

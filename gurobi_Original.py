@@ -9,7 +9,7 @@ Main script for the two-stage SP model
 import pandas as pd
 import numpy as np
 from gurobipy import *
-from plugins import append_df_to_excel
+from plugins import *
 import time
 import config  # Importing the parameters and data reading method from config.py
 
@@ -23,10 +23,9 @@ LS = config.LS
 NS = config.NS
 
 print('define parameters ...\n')
-filename = 'data.xlsx'
 
 # Read data using the method from config.py
-CF, U, H, V, CP, CH, G, CT, D, pr, demand = config.read_data(filename)
+CF, U, H, V, CP, CH, G, CT, D, pr, demand = read_data()
 
 
 # create a new model
@@ -153,7 +152,7 @@ if m.status == GRB.OPTIMAL:
     toc = time.perf_counter()
     elapsed_time = toc - tic
 
-    save_and_print_results(script_name, config.IS, config.NS, Vf, elapsed_time)
+    save_and_print_results(script_name, config.IS, config.NS, config.MS, config.SS_SAA, opt_f, elapsed_time)
 
     # save_detailed_results(
     #     filename='data.xlsx',  # The target Excel file

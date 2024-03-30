@@ -68,6 +68,13 @@ def read_data(filename=config.Input_file):
 
     return CF, U, H, V, CP, CH, G, CT, D, pr, demand
 
+def generate_script_name(data_preprocess_methods, cluster_methods, sample_methods):
+    if data_preprocess_methods:
+        script_name = f"{data_preprocess_methods}_{cluster_methods}_{sample_methods}"
+    else:
+        script_name = f"{cluster_methods}_{sample_methods}"
+    return script_name
+
 def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None ,index=False ,header=False , **to_excel_kwargs):
     """
     Append a DataFrame [df] to existing Excel file [filename]
@@ -261,3 +268,27 @@ def plot_cluster_3d_sampling(demand_transformed, cluster_labels, sample, save_di
     plt.savefig(os.path.join(save_directory, f'{script_name}_sample_3D_{m+1}.jpg'), format='jpg')
     # plt.close()  # 关闭图形界面，防止内存泄露
     # print(f"Saved plot as {save_path}")
+
+def calculate_gap(ff, MS, gurobi_opt):
+    """
+    Calculate the GAP percentage between the average solution of the sample groups
+    and the provided global best result.
+
+    :param ff: List or array of solutions from the sample groups.
+    :param MS: The number of samples or sample groups.
+    :param gurobi_opt: The known global best result from Gurobi or similar solver.
+    :return: GAP percentage.
+    """
+    # Check for valid inputs
+    if MS <= 0:
+        raise ValueError("Number of samples (MS) must be greater than 0.")
+    if gurobi_opt <= 0:
+        raise ValueError("Global best result (gurobi_opt) must be greater than 0.")
+    
+    # Calculate average of the solutions
+    ave_f = np.sum(ff) / MS
+
+    # Calculate GAP
+    gap = (ave_f - gurobi_opt) / gurobi_opt * 100  # GAP as a percentage
+
+    return gap

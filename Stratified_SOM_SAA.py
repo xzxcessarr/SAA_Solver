@@ -5,10 +5,8 @@ import pandas as pd
 import numpy as np
 import time
 from minisom import MiniSom
-from plugins import append_df_to_excel
-from plugins import save_and_print_results
-from models import getsol
-from models import renew
+from plugins import *
+from solve_models import *
 import config  # Importing the parameters and data reading method from config.py
 
 tic = time.perf_counter()
@@ -22,10 +20,9 @@ NS = config.NS
 MS = config.MS
 
 print('define parameters ...\n')
-filename = 'data.xlsx'
 
 # Read data using the method from config.py
-CF, U, H, V, CP, CH, G, CT, D, pr, demand = config.read_data(filename)
+CF, U, H, V, CP, CH, G, CT, D, pr, demand = read_data()
 
 # to store variables
 ff = np.zeros((MS, 1))
@@ -48,15 +45,15 @@ cluster_labels = np.array([neuron_labels[tuple(winner)] for winner in winning_ne
 unique_labels = np.unique(cluster_labels)
 num_unique_labels = len(unique_labels)
 
-standard = np.zeros((num_unique_labels, 1))
-temp_num = np.zeros((num_unique_labels, 1))
+
 
 # solving sample problem
 for m in range(MS):
     #Stratified random sampling
     sample = []
 
-
+    standard = np.zeros((num_unique_labels, 1))
+    temp_num = np.zeros((num_unique_labels, 1))
     for i in unique_labels:
         cluster_each = np.argwhere(cluster_labels == i).flatten()
         cluster_each = cluster_each.reshape(1, -1).squeeze(0).tolist()
@@ -159,8 +156,6 @@ toc = time.perf_counter()
 elapsed_time = toc - tic
 elapsed_time_df = pd.DataFrame([['Elapsed time', elapsed_time]], columns=['Metric', 'Value'])
 
-location = pd.DataFrame(Vx)
-inventory = pd.DataFrame(Vy).T
+save_and_print_results(script_name, config.IS, config.NS, config.MS, config.SS_SAA, opt_f, elapsed_time)
 
-save_and_print_results(script_name, config.IS, config.NS, opt_f, elapsed_time)
 

@@ -1,5 +1,4 @@
 import numpy as np
-from sklearn.decomposition import TruncatedSVD
 
 def apply_pca(demand, n_components=0.99):
     from sklearn.decomposition import PCA
@@ -15,7 +14,7 @@ def apply_pca(demand, n_components=0.99):
     """
     pca = PCA(n_components=n_components)
     pca_demand = pca.fit_transform(demand)
-    return pca_demand, pca.n_components_
+    return pca_demand, pca.n_components_, "PCA"
 
 def apply_tsne(demand, n_components=2, perplexity=30.0, random_state=0):
     from sklearn.manifold import TSNE
@@ -33,10 +32,11 @@ def apply_tsne(demand, n_components=2, perplexity=30.0, random_state=0):
     """
     tsne = TSNE(n_components=n_components, perplexity=perplexity, random_state=random_state)
     tsne_demand = tsne.fit_transform(demand)
-    return tsne_demand
+    return tsne_demand, n_components, "t-SNE"
 
-def apply_truncated_svd(data, n_components=0.99):
+def apply_truncated_svd(demand, n_components=0.99):
     from sklearn.decomposition import TruncatedSVD
+    from scipy.sparse import csr_matrix
     """
     应用TruncatedSVD进行降维。
     
@@ -48,12 +48,14 @@ def apply_truncated_svd(data, n_components=0.99):
     svd_result -- TruncatedSVD降维后的数据。
     n_components -- 选择的成分数。
     """
+    demand = csr_matrix(demand)
+
     if not 0 < n_components <= 1:
         raise ValueError("n_components must be a float in the range (0, 1].")
     
     # 初始化TruncatedSVD，这里我们先指定一个较大的n_components
-    svd = TruncatedSVD(n_components=min(data.shape)-1)
-    svd.fit(data)
+    svd = TruncatedSVD(n_components=min(demand.shape)-1)
+    svd.fit(demand)
     
     # 计算累积可解释方差
     cumulative_variance = np.cumsum(svd.explained_variance_ratio_)
@@ -62,7 +64,34 @@ def apply_truncated_svd(data, n_components=0.99):
     
     # 使用找到的成分数重新拟合TruncatedSVD
     svd = TruncatedSVD(n_components=n_components_selected)
-    svd_result = svd.fit_transform(data)
+    svd_demand = svd.fit_transform(demand)
     
-    return svd_result, n_components_selected
+    return svd_demand, n_components_selected, "SVD"
 
+def apply_factor_analysis(demand, n_components=0.99):
+    from sklearn.decomposition import FactorAnalysis
+    from sklearn.decomposition import PCA
+    """
+    应用因子分析进行降维。
+    
+    参数:
+    demand -- 待降维的数据，应为二维NumPy数组或类似数组的数据结构。
+    n_components -- 保留的方差比例。默认为0.99，即保留99%的方差。
+    
+    返回:
+    fa_result -- 因子分析降维后的数据。
+    n_factors -- 选择的因子数。
+    """
+    pca = PCA(n_components=n_components).fit(demand)
+    n_factors = pca.n_components_
+    
+    # 初始化因子分析对象
+    fa = FactorAnalysis(n_components=n_factors)
+    
+    # 对数据进行拟合
+    fa.fit(demand)
+
+    # 对数据进行降维
+    fa_result = fa.transform(demand)
+    
+    return fa_result, n_factors, "Factor"
