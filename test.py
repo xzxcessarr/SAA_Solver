@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import pandas as pd
 import numpy as np
 import time
-from sklearn.cluster import KMeans
 import config  # Importing the parameters and data reading method from config.py
 from plugins import *
 from solve_models import *
@@ -20,14 +18,9 @@ LS = config.LS
 NS = config.NS
 MS = config.MS
 SS_SAA = config.SS_SAA
-
 CF, U, H, V, CP, CH, G, CT, D, pr, demand = read_data()
 
-# demand_process, demand_process_components, demand_process_methods=apply_pca(demand, 0.99)
-demand_process, demand_process_components, demand_process_methods=apply_factor_analysis(demand, 0.99)
-# demand_process=demand
-
-# to store variables
+# 保存变量
 ff = np.zeros((MS, 1))
 ec = np.zeros((MS, 1))
 pc = np.zeros((MS, 1))
@@ -36,11 +29,26 @@ xx = np.zeros((IS, LS, MS))
 yy = np.zeros((AS, IS, MS))
 sum_sample = np.zeros((MS, IS))
 
-# cluster = KMeans(n_clusters=SS_SAA, init='k-means++', random_state=0).fit(demand_process)
+# solving original problem
+new_f = np.zeros((MS, 1))
+new_fc = np.zeros((MS, 1))
+new_pc = np.zeros((MS, 1))
+new_tc = np.zeros((MS, 1))
+new_hc = np.zeros((MS, 1))
+new_wc = np.zeros((MS, 1))
+
+
+
+demand_process, demand_process_components, demand_process_methods=apply_factor_analysis(demand, 0.99)
+# demand_process=demand
+
+
 # cluster_labels, cluster_methods = apply_dbscan_clustering(demand_process, 5)
 # cluster_labels, cluster_methods = apply_som_clustering(demand)
-cluster_labels, cluster_methods = apply_som_clustering(demand)
-num_unique_labels = len(np.unique(cluster_labels))
+cluster_labels, cluster_methods = apply_som_clustering(demand, 5, 3)
+
+cluster_num = len(np.unique(cluster_labels))
+# cluster_num = SS_SAA
 
 # demand_transformed, _, _ = apply_pca(demand, 3)
 demand_transformed, _, _ = apply_tsne(demand, 3)
@@ -48,8 +56,6 @@ demand_transformed, _, _ = apply_tsne(demand, 3)
 samples_info = []
 
 for m in range(MS):
-    # cluster_num = SS_SAA
-    cluster_num = num_unique_labels
     
     sample, sample_methods = stratified_random_sampling(demand, cluster_labels, cluster_num, IS)
     # sample, sample_methods = simple_random_sampling(cluster_labels)
@@ -83,14 +89,6 @@ for m in range(MS):
     script_name = generate_script_name(demand_process_methods, cluster_methods, sample_methods)
     samples_info.append((sample, script_name, m))
 
-# solving original problem
-
-new_f = np.zeros((MS, 1))
-new_fc = np.zeros((MS, 1))
-new_pc = np.zeros((MS, 1))
-new_tc = np.zeros((MS, 1))
-new_hc = np.zeros((MS, 1))
-new_wc = np.zeros((MS, 1))
 
 for m in range(MS):
     new_x = xx[:, :, m]

@@ -2,7 +2,7 @@
 """
 Configuration and data reading method for the two-stage SP model
 """
-# Parameters
+# 参数
 IS = 20  # Set of locations
 AS = 3  # Set of item types
 LS = 3  # Set of size categories
@@ -19,8 +19,64 @@ data_preprocess_methods="PCA"
 cluster_methods="kmeans++"
 sample_methods="Stratified"
 
+# 数据降维处理配置
+DATA_PROCESS_METHOD = 'pca'  # 可选 'pca', 'truncated_svd', 'factor_analysis', 'tsne', 'none'
+DATA_PROCESS_PARAMS = {
+    'pca': {'n_components': 0.99},
+    'truncated_svd': {'n_components': 0.99}, 
+    'factor_analysis': {'variance_ratio_threshold': 0.99}, 
+    # 'tsne': {'n_components': 2, 'perplexity': 30.0, 'random_state': 0},  # t-SNE仅用于可视化降维，不推荐使用来进行聚类前降维
+    'none': {}  # 不进行降维
+}
 
+# 聚类配置
+CLUSTER_METHOD = 'som'  # 可选 'kmeans', 'spectral', 'optics', 'meanshift', 'gmm', 'dbscan', 'agglomerative', 'som'
+CLUSTER_PARAMS = {
+    'kmeans': {'n_clusters': 8, 'init': 'k-means++', 'random_state': 0},
+    'spectral': {'n_clusters': 8, 'affinity': 'nearest_neighbors', 'n_neighbors': 10, 'random_state': 0},
+    'optics': {'min_samples': 10, 'xi': 0.05, 'min_cluster_size': 0.1},
+    'meanshift': {'bandwidth': None, 'bin_seeding': False, 'min_bin_freq': 1, 'cluster_all': True, 'n_jobs': None, 'max_iter': 300},
+    'gmm': {'n_components': 8, 'covariance_type': 'full', 'random_state': 0},
+    'dbscan': {'eps': 0.5, 'min_samples': 5},
+    'agglomerative': {'n_clusters': 8, 'linkage': 'average'},
+    'som': {'x': 5, 'y': 3, 'sigma': 0.7, 'learning_rate': 0.5, 'num_iteration': 1000},
+}
 
+# # 抽样配置
+# SAMPLE_METHOD = 'stratified_random'  # 可选 'simple_random', 'stratified_random'
+# SAMPLE_PARAMS = {
+#     'stratified_random': {'cluster_num': 10, 'IS': 5},  # 示例参数：假设有10个层，需求数据维度为5
+#     'simple_random': {}  # 简单随机抽样不需要额外参数
+# }
 
+# # 3D可视化配置
+# DIM3_REDUCTION_METHOD = 'tsne'
+# DIM3_REDUCTION_PARAMS = {
+#     'tsne': {'n_components': 3},
+#     'pca': {'n_components': 3}
+# }
 
+# # 2D可视化配置
+# DIM2_REDUCTION_METHOD = 'tsne'
+# DIM2_REDUCTION_PARAMS = {
+#     'tsne': {'n_components': 2},
+#     'pca': {'n_components': 2}
+# }
 
+# 通用可视化配置
+DIM_REDUCTION_CONFIG = {
+    '2d': {
+        'method': 'tsne',
+        'params': {
+            'tsne': {'n_components': 2},
+            'pca': {'n_components': 2}
+        }
+    },
+    '3d': {
+        'method': 'tsne',
+        'params': {
+            'tsne': {'n_components': 3},
+            'pca': {'n_components': 3}
+        }
+    }
+}

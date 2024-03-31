@@ -56,9 +56,23 @@ def stratified_random_sampling(demand, cluster_labels, cluster_num, IS):
 def simple_random_sampling(cluster_labels):
     # randomly select one from each group
     sample = []
+    
     for i in np.unique(cluster_labels):
         cluster_each = np.argwhere(cluster_labels == i)
         cluster_each = cluster_each.reshape(1, -1).squeeze(0).tolist()
         temp = np.random.choice(len(cluster_each), 1, replace=False)
         sample.append(cluster_each[temp[0]]) 
     return sample, "Simple"
+
+# class SampleGenerator:
+#     def __init__(self, method, params):
+#         self.method = method
+#         self.params = params
+
+#     def generate(self, data, labels):
+#         if self.method == 'simple_random':
+#             return self.simple_random_sampling(labels)
+#         elif self.method == 'stratified_random':
+#             return self.stratified_random_sampling(data, labels, **self.params)
+#         else:
+#             raise ValueError('未知的样本生成方法: {}'.format(self.method))

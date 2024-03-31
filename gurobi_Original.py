@@ -152,7 +152,7 @@ if m.status == GRB.OPTIMAL:
     toc = time.perf_counter()
     elapsed_time = toc - tic
 
-    save_and_print_results(script_name, config.IS, config.NS, config.MS, config.SS_SAA, opt_f, elapsed_time)
+    save_and_print_results(script_name, config.IS, config.NS, config.MS, config.SS_SAA, Vf, elapsed_time)
 
     # save_detailed_results(
     #     filename='data.xlsx',  # The target Excel file

@@ -81,7 +81,7 @@ def apply_agglomerative_clustering(distance_matrix, n_clusters, linkage='average
     # 返回聚类标签和聚类方法名称
     return cluster.labels_, "Agglomerative"
 
-def apply_som_clustering(demand, x=5, y=5, sigma=0.7, learning_rate=0.5, num_iteration=1000):
+def apply_som_clustering(demand, x=5, y=3, sigma=0.7, learning_rate=0.5, num_iteration=1000):
     from minisom import MiniSom
     import numpy as np
     
@@ -100,3 +100,28 @@ def apply_som_clustering(demand, x=5, y=5, sigma=0.7, learning_rate=0.5, num_ite
 
     # 返回SOM聚类标签
     return cluster_labels, "SOM"
+
+class ClusteringMethod:
+    def __init__(self, method, params):
+        self.method = method
+        self.params = params
+
+    def apply_clustering(self, demand):
+        if self.method == 'kmeans':
+            return apply_kmeans_clustering(demand, **self.params)
+        elif self.method == 'spectral':
+            return apply_spectral_clustering(demand, **self.params)
+        elif self.method == 'optics':
+            return apply_optics_clustering(demand, **self.params)
+        elif self.method == 'meanshift':
+            return apply_meanshift_clustering(demand, **self.params)
+        elif self.method == 'gmm':
+            return apply_gaussian_mixture_clustering(demand, **self.params)
+        elif self.method == 'dbscan':
+            return apply_dbscan_clustering(demand, **self.params)
+        elif self.method == 'agglomerative':
+            return apply_agglomerative_clustering(demand, **self.params)
+        elif self.method == 'som':
+            return apply_som_clustering(demand, **self.params)
+        else:
+            raise ValueError('Unknown clustering method: {}'.format(self.method))

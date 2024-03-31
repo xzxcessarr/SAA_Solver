@@ -16,24 +16,6 @@ def apply_pca(demand, n_components=0.99):
     pca_demand = pca.fit_transform(demand)
     return pca_demand, pca.n_components_, "PCA"
 
-def apply_tsne(demand, n_components=2, perplexity=30.0, random_state=0):
-    from sklearn.manifold import TSNE
-    """
-    应用t-SNE进行降维。
-    
-    参数:
-    data -- 待降维的数据，应为二维NumPy数组。
-    n_components -- 降维后的维数。t-SNE通常用于将数据降至2维或3维以便可视化。
-    perplexity -- t-SNE的复杂度参数，建议取值在5到50之间。默认为30。
-    random_state -- 随机种子用于可重复性。默认为0。
-    
-    返回:
-    tsne_result -- t-SNE降维后的数据。
-    """
-    tsne = TSNE(n_components=n_components, perplexity=perplexity, random_state=random_state)
-    tsne_demand = tsne.fit_transform(demand)
-    return tsne_demand, n_components, "t-SNE"
-
 def apply_truncated_svd(demand, n_components=0.99):
     from sklearn.decomposition import TruncatedSVD
     from scipy.sparse import csr_matrix
@@ -68,30 +50,66 @@ def apply_truncated_svd(demand, n_components=0.99):
     
     return svd_demand, n_components_selected, "SVD"
 
-def apply_factor_analysis(demand, n_components=0.99):
-    from sklearn.decomposition import FactorAnalysis
-    from sklearn.decomposition import PCA
+def apply_factor_analysis(demand, variance_ratio_threshold=0.99):
+    from sklearn.decomposition import PCA, FactorAnalysis
     """
     应用因子分析进行降维。
     
     参数:
     demand -- 待降维的数据，应为二维NumPy数组或类似数组的数据结构。
-    n_components -- 保留的方差比例。默认为0.99，即保留99%的方差。
+    variance_ratio_threshold -- 保留的方差比例阈值，默认为0.99。
     
     返回:
     fa_result -- 因子分析降维后的数据。
     n_factors -- 选择的因子数。
     """
-    pca = PCA(n_components=n_components).fit(demand)
-    n_factors = pca.n_components_
+    # 使用PCA确定累计方差达到阈值所需的成分数
+    pca = PCA().fit(demand)
+    cumulative_variance_ratio = np.cumsum(pca.explained_variance_ratio_)
+    n_factors = np.argmax(cumulative_variance_ratio >= variance_ratio_threshold) + 1
     
-    # 初始化因子分析对象
+    # 初始化因子分析对象，使用确定的因子数
     fa = FactorAnalysis(n_components=n_factors)
     
-    # 对数据进行拟合
+    # 对数据进行拟合与降维
     fa.fit(demand)
-
-    # 对数据进行降维
     fa_result = fa.transform(demand)
     
     return fa_result, n_factors, "Factor"
+
+# t-SNE仅用于可视化降维，不推荐使用来进行聚类前降维
+def apply_tsne(demand, n_components=2, perplexity=30.0, random_state=0):
+    from sklearn.manifold import TSNE
+    """
+    应用t-SNE进行降维。
+    
+    参数:
+    data -- 待降维的数据，应为二维NumPy数组。
+    n_components -- 降维后的维数。t-SNE通常用于将数据降至2维或3维以便可视化。
+    perplexity -- t-SNE的复杂度参数，建议取值在5到50之间。默认为30。
+    random_state -- 随机种子用于可重复性。默认为0。
+    
+    返回:
+    tsne_result -- t-SNE降维后的数据。
+    """
+    tsne = TSNE(n_components=n_components, perplexity=perplexity, random_state=random_state)
+    tsne_demand = tsne.fit_transform(demand)
+    return tsne_demand, n_components, "t-SNE"
+
+class DataProcessor:
+    def __init__(self, method, params):
+        self.method = method
+        self.params = params
+
+    def apply_reduction(self, demand):
+        if self.method == 'pca':
+            return apply_pca(demand, **self.params)
+        elif self.method == 'truncated_svd':
+            return apply_truncated_svd(demand, **self.params)
+        elif self.method == 'factor_analysis':
+            return apply_factor_analysis(demand, **self.params)
+        elif self.method == 'tsne':
+            return apply_tsne(demand, **self.params)
+        else:
+            raise ValueError(f'Unknown dimensionality reduction method: {self.method}')
+            
