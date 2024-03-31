@@ -9,7 +9,7 @@ from data_preprocess import *
 from sample_models import *
 from cluster_models import *
 
-def main():
+def solver(DATA_PROCESS_METHOD, CLUSTER_METHOD, SAMPLE_GENERATE_METHOD, DIM_REDUCTION_METHOD):
     tic = time.perf_counter()
 
     # 使用config.py中的参数
@@ -30,45 +30,45 @@ def main():
     yy = np.zeros((AS, IS, MS))
     sum_sample = np.zeros((MS, IS))
 
-    # solving original problem
     new_f = np.zeros((MS, 1))
     new_fc = np.zeros((MS, 1))
     new_pc = np.zeros((MS, 1))
     new_tc = np.zeros((MS, 1))
     new_hc = np.zeros((MS, 1))
-    new_wc = np.zeros((MS, 1))
+    new_wc = np.zeros((MS, 1))  
+
+    samples_info = []
     
-    # 数据处理对象
-    data_processor = DataProcessor(config.DATA_PROCESS_METHOD, config.DATA_PROCESS_PARAMS[config.DATA_PROCESS_METHOD])
+    # 数据处理对象实例化
+    data_processor = DataProcessor(DATA_PROCESS_METHOD, config.DATA_PROCESS_PARAMS[DATA_PROCESS_METHOD])
     demand_process, demand_process_components, demand_process_methods = data_processor.apply_reduction(demand)
 
-    # 聚类分析对象
-    cluster_analyzer = ClusteringMethod(config.CLUSTER_METHOD, config.CLUSTER_PARAMS[config.CLUSTER_METHOD])
+    # 聚类分析对象实例化
+    cluster_analyzer = ClusteringMethod(CLUSTER_METHOD, config.CLUSTER_PARAMS[CLUSTER_METHOD])
     cluster_labels, cluster_methods  = cluster_analyzer.apply_clustering(demand_process)
+    cluster_num = len(np.unique(cluster_labels))
+
+    # 样本生成器对象实例化
+    sample_generator = SampleGenerator(
+        SAMPLE_GENERATE_METHOD,
+        config.SAMPLE_GENERATE_PARAMS[SAMPLE_GENERATE_METHOD]
+    )
+    script_name = generate_script_name(demand_process_methods, cluster_methods, SAMPLE_GENERATE_METHOD)
 
     # 创建可视化降维
-    # grapher_processor = DataProcessor(config.DIM2_REDUCTION_METHOD, config.DIM2_REDUCTION_PARAMS[config.DIM2_REDUCTION_METHOD])
-    # demand_transformed, _, _ = grapher_processor.apply_reduction(demand)
-    selected_reduction_config = config.DIM_REDUCTION_CONFIG['2d']
+    selected_reduction_config = config.DIM_REDUCTION_CONFIG[DIM_REDUCTION_METHOD]
     grapher_processor = DataProcessor(
     selected_reduction_config['method'], 
     selected_reduction_config['params'][selected_reduction_config['method']]
     )
     demand_transformed, _, _ = grapher_processor.apply_reduction(demand)
-    
-    cluster_num = len(np.unique(cluster_labels))
 
-    
-    samples_info = []
+    # plot_cluster(demand_transformed, cluster_labels, config.Graphs_sample_save_directory, script_name)
+    plot_cluster_3d(demand_transformed, cluster_labels, config.Graphs_sample_save_directory, script_name)
 
     for m in range(MS):
-    
-        sample, sample_methods = stratified_random_sampling(demand, cluster_labels, cluster_num, IS)
-        # sample, sample_methods = simple_random_sampling(cluster_labels)
 
-
-        script_name = generate_script_name(demand_process_methods, cluster_methods, sample_methods)
-
+        sample, sample_methods = sample_generator.generate(demand, cluster_labels, cluster_num)
 
         SS = len(sample)
         pr_sample = np.ones(SS) / SS
@@ -127,17 +127,13 @@ def main():
 
     toc = time.perf_counter()
     elapsed_time = toc - tic
-    elapsed_time_df = pd.DataFrame([['Elapsed time', elapsed_time]], columns=['Metric', 'Value'])
 
-    for sample, script_name, m in samples_info:
-        # plot_cluster_3d_sampling(demand_transformed, cluster_labels, sample, config.Graphs_sample_save_directory, script_name, m)
-        plot_cluster_sampling(demand_transformed, cluster_labels, sample, config.Graphs_sample_save_directory, script_name, m)
+    # generate_cluster_plots(demand_transformed, samples_info, cluster_labels)
 
-    save_and_print_results(script_name, config.IS, config.NS, config.MS, config.SS_SAA, opt_f, elapsed_time)
-
-    # gap_percentage = calculate_gap(ff, MS, gurobi_opt)
-
+    # gap_percentage = calculate_gap(ff, MS, config.gurobi_opt)
+    gap = float((opt_f - config.gurobi_opt) / config.gurobi_opt * 100)
+    save_and_print_results(script_name, config.IS, config.NS, config.MS, config.SS_SAA, opt_f, elapsed_time, cluster_num, gap)
 
 
 if __name__ == "__main__":
-    main()
+    solver('pca','kmeans','Stratified','2d')

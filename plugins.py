@@ -162,28 +162,6 @@ def save_detailed_results(script_name, Vx, Vy, elapsed_time, start_row=1, sheet_
     
     print("Detailed results have been saved to Excel.")
 
-def save_and_print_results(script_name, IS, NS, MS, SS_SAA, opt_f, elapsed_time):
-    """
-    Save results to an Excel file and print them.
-
-    :param script_name: str, name of the script/method used.
-    :param IS: int, input size parameter.
-    :param NS: int, number of simulations/iterations/etc.
-    :param opt_f: float, the optimized function value.
-    :param elapsed_time: float, time taken for the operation in seconds.
-    """
-    # 创建一个DataFrame来组织需要输出的数据
-    result_df = pd.DataFrame([[script_name, IS, NS, MS, SS_SAA, float(opt_f), elapsed_time]])
-
-    # 将数据输出到Excel的特定列，只有一列
-    append_df_to_excel(config.Output_file, result_df, sheet_name='results', index=False, header=False, startrow=0)
-
-    # 打印结果
-    print(f"Method: {script_name}")
-    print(f"I: {IS}, S: {NS}, M: {MS}, N: {SS_SAA}")    
-    print(f"Costs: {float(opt_f)}")
-    print(f"Elapsed time: {elapsed_time} seconds.")
-
 def plot_cluster_sampling(demand_transformed, cluster_labels, sample, save_directory, script_name, m):
     
     # 绘制聚类结果和分层采样的样本点
@@ -268,6 +246,75 @@ def plot_cluster_3d_sampling(demand_transformed, cluster_labels, sample, save_di
     # plt.close()  # 关闭图形界面，防止内存泄露
     # print(f"Saved plot as {save_path}")
 
+def plot_cluster(demand_transformed, cluster_labels, save_directory, script_name):
+    
+    plt.figure(figsize=(10, 8), dpi=300)
+    # 绘制聚类结果
+    for i, label in enumerate(np.unique(cluster_labels)):
+        plt.scatter(
+            demand_transformed[cluster_labels == label, 0],
+            demand_transformed[cluster_labels == label, 1],
+            label=f'Cluster {i}'
+        )
+
+    plt.title('Clustering Results')
+    plt.xlabel('Feature 1')
+    plt.ylabel('Feature 2')
+    plt.legend()
+
+    # 检查保存目录是否存在，如果不存在则创建
+    if not os.path.exists(save_directory):
+        os.makedirs(save_directory)
+
+    # 保存图片到指定目录
+    plt.savefig(os.path.join(save_directory, f'{script_name}_cluster.jpg'), format='jpg')
+    # plt.close()  # 关闭图形界面，防止内存泄露
+
+def plot_cluster_3d(demand_transformed, cluster_labels, save_directory, script_name):
+    # 创建一个新的图和一个三维轴
+    fig = plt.figure(figsize=(10, 8), dpi=300)
+    ax = fig.add_subplot(111, projection='3d')
+
+    # 绘制聚类结果的散点图
+    for i, label in enumerate(np.unique(cluster_labels)):
+        ax.scatter(
+            demand_transformed[cluster_labels == label, 0],  # x轴坐标
+            demand_transformed[cluster_labels == label, 1],  # y轴坐标
+            demand_transformed[cluster_labels == label, 2],  # z轴坐标
+            label=f'Cluster {i}'
+        )
+
+    # 设置图表标题和坐标轴标签
+    ax.set_title('3D Clustering Results')
+    ax.set_xlabel('Feature 1')
+    ax.set_ylabel('Feature 2')
+    ax.set_zlabel('Feature 3')
+
+    # 设置视角
+    ax.view_init(elev=20., azim=45)
+
+    # 显示图例
+    ax.legend()
+
+    # 检查保存目录是否存在，如果不存在则创建
+    if not os.path.exists(save_directory):
+        os.makedirs(save_directory)
+
+    # 保存图片到指定目录
+    save_path = os.path.join(save_directory, f'{script_name}_cluster_3D.jpg')
+    plt.savefig(save_path, format='jpg')
+    # plt.close()  # 关闭图形界面，防止内存泄露
+
+def generate_cluster_plots(demand_transformed, samples_info, cluster_labels):
+    # Generate cluster plots for each sample
+    for sample, script_name, m in samples_info:
+        if config.DIM_REDUCTION_METHOD == '2d':
+            plot_cluster_sampling(demand_transformed, cluster_labels, sample, config.Graphs_sample_save_directory, script_name, m)
+        elif config.DIM_REDUCTION_METHOD == '3d':
+            plot_cluster_3d_sampling(demand_transformed, cluster_labels, sample, config.Graphs_sample_save_directory, script_name, m)
+        else:
+            raise ValueError("Invalid plot_type: {}. Choose '2d' or '3d'.".format(config.DIM_REDUCTION_METHOD))
+
 def calculate_gap(ff, MS, gurobi_opt):
     """
     Calculate the GAP percentage between the average solution of the sample groups
@@ -288,6 +335,28 @@ def calculate_gap(ff, MS, gurobi_opt):
     ave_f = np.sum(ff) / MS
 
     # Calculate GAP
-    gap = (ave_f - gurobi_opt) / gurobi_opt * 100  # GAP as a percentage
+    gap_percentage = (gurobi_opt - ave_f) / gurobi_opt * 100  # GAP as a percentage
 
-    return gap
+    return gap_percentage
+
+def save_and_print_results(script_name, IS, NS, MS, SS_SAA, opt_f, elapsed_time, cluster_num = 0, gap = 0):
+    """
+    Save results to an Excel file and print them.
+
+    :param script_name: str, name of the script/method used.
+    :param IS: int, input size parameter.
+    :param NS: int, number of simulations/iterations/etc.
+    :param opt_f: float, the optimized function value.
+    :param elapsed_time: float, time taken for the operation in seconds.
+    """
+    # 创建一个DataFrame来组织需要输出的数据
+    result_df = pd.DataFrame([[script_name, IS, NS, MS, SS_SAA, float(opt_f), elapsed_time, cluster_num, gap]])
+
+    # 将数据输出到Excel的特定列，只有一列
+    append_df_to_excel(config.Output_file, result_df, sheet_name='results', index=False, header=False, startrow=0)
+
+    # 打印结果
+    print(f"Method: {script_name}")
+    print(f"I: {IS}, S: {NS}, M: {MS}, N: {SS_SAA}, clustering_num: {cluster_num}")    
+    print(f"Costs: {float(opt_f)}, gap: {gap}")
+    print(f"Elapsed time: {elapsed_time} seconds.")

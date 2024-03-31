@@ -64,15 +64,15 @@ def simple_random_sampling(cluster_labels):
         sample.append(cluster_each[temp[0]]) 
     return sample, "Simple"
 
-# class SampleGenerator:
-#     def __init__(self, method, params):
-#         self.method = method
-#         self.params = params
+class SampleGenerator:
+    def __init__(self, method, params):
+        self.method = method
+        self.params = params
 
-#     def generate(self, data, labels):
-#         if self.method == 'simple_random':
-#             return self.simple_random_sampling(labels)
-#         elif self.method == 'stratified_random':
-#             return self.stratified_random_sampling(data, labels, **self.params)
-#         else:
-#             raise ValueError('未知的样本生成方法: {}'.format(self.method))
+    def generate(self, data, labels, cluster_num):
+        if self.method == 'Simple':
+            return simple_random_sampling(labels)
+        elif self.method == 'Stratified':
+            return stratified_random_sampling(data, labels, cluster_num, **self.params)
+        else:
+            raise ValueError('未知的样本生成方法: {}'.format(self.method))

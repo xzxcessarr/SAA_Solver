@@ -110,6 +110,8 @@ class DataProcessor:
             return apply_factor_analysis(demand, **self.params)
         elif self.method == 'tsne':
             return apply_tsne(demand, **self.params)
+        elif self.method == 'none':
+            return demand, -1, "Original"
         else:
-            raise ValueError(f'Unknown dimensionality reduction method: {self.method}')
+            raise ValueError(f'未知的降维方法: {self.method}')
             

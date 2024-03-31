@@ -124,4 +124,4 @@ class ClusteringMethod:
         elif self.method == 'som':
             return apply_som_clustering(demand, **self.params)
         else:
-            raise ValueError('Unknown clustering method: {}'.format(self.method))
+            raise ValueError('未知的聚类方法: {}'.format(self.method))
