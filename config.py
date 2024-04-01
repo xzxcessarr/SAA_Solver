@@ -2,22 +2,15 @@
 """
 Configuration and data reading method for the two-stage SP model
 """
-# 参数
-IS = 40  # Set of locations
-AS = 3  # Set of item types
-LS = 3  # Set of size categories
-NS = 200  # Scenario样本总量
-SS_SAA = 20  # Scenario number of samples单个样本容量
-MS = 10  # Sample number样本数量
+# 不推荐修改参数，修改需要调整输入数据的维度结构等信息
+AS = 3  # 物资种类
+LS = 3  # 仓库种类
+n_clusters = 10
 Water = 1
 Food = 0.25
 Medicine = 0.125
-Input_file = 'input/data.xlsx'
-Output_file = 'result.xlsx'
-Graphs_sample_save_directory = "./Graphs"
-gurobi_opt = 60704072.1222051
-n_clusters = 10
 
+# 相关方法配置参数，相关方法均可自由修改和调用
 # 数据降维处理配置
 # DATA_PROCESS_METHOD = 'factor_analysis'  # 可选 'pca', 'truncated_svd', 'factor_analysis', 'tsne', 'none'
 DATA_PROCESS_PARAMS = {
@@ -44,13 +37,13 @@ CLUSTER_PARAMS = {
 # 抽样配置
 # SAMPLE_GENERATE_METHOD  = 'Stratified'  # 可选 'simple_random', 'stratified_random'
 SAMPLE_GENERATE_PARAMS = {
-    'Stratified': {'IS': IS}, 
-    'Simple': {}  # 简单随机抽样不需要额外参数
+    'Stratified': {}, 
+    'Simple': {}
 }
 
 # 通用可视化配置
-# DIM_REDUCTION_METHOD = '2d'
-DIM_REDUCTION_CONFIG = {
+# GRAPH_METHOD = '2d'
+GRAPH_CONFIG = {
     '2d': {
         'method': 'tsne',
         'params': {

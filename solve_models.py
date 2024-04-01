@@ -130,7 +130,7 @@ def getsol(IS,AS,LS,SS,CF,U,V,H,CP,CH,G,CT,D_sample,pr_sample):
             print('Encountered a Gurobi error. Please check the Gurobi log for more details.')
             attempt += 1
             
-    print(f"Try to find an optimal solution for {attempt} attempts.")
+    print(f"Try to find an optimal solution for {attempt + 1} attempts.")
 
 def renew(IS,AS,LS,NS,CF,U,V,H,CP,CH,G,CT,D,pr,new_x,new_y):
     """

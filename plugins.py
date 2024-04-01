@@ -1,28 +1,13 @@
-from openpyxl import load_workbook
-from openpyxl import Workbook
-from openpyxl.utils.dataframe import dataframe_to_rows
 import pandas as pd
-import config
-import os
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def read_data(filename=config.Input_file):
+def read_data(filename, IS, NS, AS, Food, Medicine):
     """
     Reads data from an Excel file and returns parameters and data arrays.
-
-    Parameters:
-        filename (str): Name of the Excel file.
-
-    Returns:
-        tuple: CF, U, H, V, CP, CH, G, CT, D, pr, demand
     """
-    IS = config.IS
-    AS = config.AS
-    NS = config.NS
-    Food = config.Food
-    Medicine = config.Medicine
 
     scenario_sheet_name = f'scenario_{IS}'
     probability_column_name = f'w{NS // 100}'
@@ -75,6 +60,9 @@ def generate_script_name(data_preprocess_methods, cluster_methods, sample_method
     return script_name
 
 def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None ,index=False ,header=False , **to_excel_kwargs):
+    from openpyxl import load_workbook
+    from openpyxl import Workbook
+    from openpyxl.utils.dataframe import dataframe_to_rows
     """
     Append a DataFrame [df] to existing Excel file [filename]
     into [sheet_name] Sheet.
@@ -160,7 +148,7 @@ def plot_cluster_sampling(demand_transformed, cluster_labels, sample, save_direc
 
     # 保存图片到指定目录
     plt.savefig(os.path.join(save_directory, f'{script_name}_sample_{m+1}.jpg'), format='jpg')
-    # plt.close()  # 关闭图形界面，防止内存泄露
+    plt.close()  # 关闭图形界面，防止内存泄露
 
 def plot_cluster_3d_sampling(demand_transformed, cluster_labels, sample, save_directory, script_name, m):
     # 创建一个新的图和一个三维轴
@@ -183,7 +171,7 @@ def plot_cluster_3d_sampling(demand_transformed, cluster_labels, sample, save_di
             demand_transformed[s, 1],  # y轴坐标
             demand_transformed[s, 2],  # z轴坐标
             c='red',  # 标记颜色
-            edgecolor='k',
+            facecolor='k',
             marker='x',  # 标记样式
             s=100  # 设置标记大小为100 point^
         )
@@ -208,7 +196,7 @@ def plot_cluster_3d_sampling(demand_transformed, cluster_labels, sample, save_di
     # save_path = os.path.join(save_directory, f'{script_name}_sample_3D_{m+1}.jpg')
     # plt.savefig(save_path, format='jpg')
     plt.savefig(os.path.join(save_directory, f'{script_name}_sample_3D_{m+1}.jpg'), format='jpg')
-    # plt.close()  # 关闭图形界面，防止内存泄露
+    plt.close()  # 关闭图形界面，防止内存泄露
     # print(f"Saved plot as {save_path}")
 
 def plot_cluster(demand_transformed, cluster_labels, save_directory, script_name):
@@ -233,7 +221,7 @@ def plot_cluster(demand_transformed, cluster_labels, save_directory, script_name
 
     # 保存图片到指定目录
     plt.savefig(os.path.join(save_directory, f'{script_name}_cluster.jpg'), format='jpg')
-    # plt.close()  # 关闭图形界面，防止内存泄露
+    plt.close()  # 关闭图形界面，防止内存泄露
 
 def plot_cluster_3d(demand_transformed, cluster_labels, save_directory, script_name):
     # 创建一个新的图和一个三维轴
@@ -268,17 +256,37 @@ def plot_cluster_3d(demand_transformed, cluster_labels, save_directory, script_n
     # 保存图片到指定目录
     save_path = os.path.join(save_directory, f'{script_name}_cluster_3D.jpg')
     plt.savefig(save_path, format='jpg')
-    # plt.close()  # 关闭图形界面，防止内存泄露
+    plt.close()  # 关闭图形界面，防止内存泄露
 
-def generate_cluster_plots(demand_transformed, samples_info, cluster_labels):
+def generate_cluster_plots(demand_transformed, cluster_labels, Graphs_cluster_save_directory, script_name, graph_type):
+    """
+    生成聚类图表。根据graph_type选择是调用2D还是3D绘图函数。
+    
+    :param demand_transformed: 转换后的需求数据
+    :param cluster_labels: 聚类的标签
+    :param save_directory: 保存图表的目录
+    :param script_name: 脚本名称，用于图表的文件名
+    :param graph_type: '2d' 或 '3d'，表示期望的图表类型
+    """
+    
+    if graph_type == '2d':
+        # 调用2D绘图函数
+        plot_cluster(demand_transformed, cluster_labels, Graphs_cluster_save_directory, script_name)
+    elif graph_type == '3d':
+        # 调用3D绘图函数
+        plot_cluster_3d(demand_transformed, cluster_labels, Graphs_cluster_save_directory, script_name)
+    else:
+        raise ValueError("Invalid graph_type: {}. Choose '2d' or '3d'.".format(graph_type))
+
+def generate_sample_plots(demand_transformed, samples_info, cluster_labels, Graphs_sample_save_directory, graph_type):
     # Generate cluster plots for each sample
     for sample, script_name, m in samples_info:
-        if config.DIM_REDUCTION_METHOD == '2d':
-            plot_cluster_sampling(demand_transformed, cluster_labels, sample, config.Graphs_sample_save_directory, script_name, m)
-        elif config.DIM_REDUCTION_METHOD == '3d':
-            plot_cluster_3d_sampling(demand_transformed, cluster_labels, sample, config.Graphs_sample_save_directory, script_name, m)
+        if graph_type == '2d':
+            plot_cluster_sampling(demand_transformed, cluster_labels, sample, Graphs_sample_save_directory, script_name, m)
+        elif graph_type == '3d':
+            plot_cluster_3d_sampling(demand_transformed, cluster_labels, sample, Graphs_sample_save_directory, script_name, m)
         else:
-            raise ValueError("Invalid plot_type: {}. Choose '2d' or '3d'.".format(config.DIM_REDUCTION_METHOD))
+            raise ValueError("Invalid plot_type: {}. Choose '2d' or '3d'.".format(graph_type))
 
 def calculate_gap(ff, MS, gurobi_opt):
     """
@@ -304,7 +312,7 @@ def calculate_gap(ff, MS, gurobi_opt):
 
     return gap_percentage
 
-def save_and_print_results(script_name, Vx, Vy, IS, NS, MS, SS_SAA, opt_f, elapsed_time, cluster_num = 0, gap = 0):
+def save_and_print_results(script_name, Output_file, Vx, Vy, IS, NS, MS, SS_SAA, opt_f, elapsed_time, cluster_num = 0, gap = 0):
     """
     Save results to an Excel file and print them.
 
@@ -314,12 +322,16 @@ def save_and_print_results(script_name, Vx, Vy, IS, NS, MS, SS_SAA, opt_f, elaps
     :param opt_f: float, the optimized function value.
     :param elapsed_time: float, time taken for the operation in seconds.
     """
+    # Naming the sheets with IS and NS values
+    results_sheet_name = f'results_IS_{IS}_NS_{NS}'
+    details_sheet_name = f'details_IS_{IS}_NS_{NS}'
+
     # 创建一个DataFrame来组织需要输出的数据
     result_df = pd.DataFrame([[script_name, IS, NS, MS, SS_SAA, float(opt_f), elapsed_time, cluster_num, gap]])
     detail_df = pd.DataFrame([[script_name, IS, NS, MS, SS_SAA, float(opt_f), elapsed_time, gap]])
 
     # 将数据输出到Excel的特定列，只有一列
-    append_df_to_excel(config.Output_file, result_df, sheet_name='results', index=False, header=False, startrow=0)
+    append_df_to_excel(Output_file, result_df, sheet_name=results_sheet_name, index=False, header=False, startrow=0)
 
     location_df = pd.DataFrame(Vx)
     inventory_df = pd.DataFrame(Vy).T
@@ -327,19 +339,19 @@ def save_and_print_results(script_name, Vx, Vy, IS, NS, MS, SS_SAA, opt_f, elaps
     start_row = 1
 
     # Save costs data
-    append_df_to_excel(config.Output_file, detail_df, sheet_name='details', index=False, header=False, startrow=0)
+    append_df_to_excel(Output_file, detail_df, sheet_name=details_sheet_name, index=False, header=False, startrow=0)
 
     # Calculate next start column for location data
     location_startcol = detail_df.shape[1] + 2  # Assuming 2 column gap for readability
-    append_df_to_excel(config.Output_file, location_df, sheet_name='details', index=True, header=True, startrow=start_row, startcol=location_startcol)
+    append_df_to_excel(Output_file, location_df, sheet_name=details_sheet_name, index=True, header=False, startrow=start_row, startcol=location_startcol)
 
     # Calculate next start column for inventory data
     inventory_startcol = location_startcol + location_df.shape[1] + 2  # Assuming 2 column gap for readability
-    append_df_to_excel(config.Output_file, inventory_df, sheet_name='details', index=True, header=True, startrow=start_row, startcol=inventory_startcol)
+    append_df_to_excel(Output_file, inventory_df, sheet_name=details_sheet_name, index=True, header=False, startrow=start_row, startcol=inventory_startcol)
 
     # # Calculate start row for elapsed time data
     # elapsed_time_startrow = start_row + max(detail_df.shape[0], inventory_df.shape[0], location_df.shape[0]) + 2  # Assuming 2 row gap for readability
-    # append_df_to_excel(config.Output_file, elapsed_time_df, sheet_name='details', index=True, header=True, startrow=elapsed_time_startrow)
+    # append_df_to_excel(Output_file, elapsed_time_df, sheet_name='details', index=True, header=True, startrow=elapsed_time_startrow)
 
     # 打印结果
     print(f"Method: {script_name}")
@@ -347,37 +359,37 @@ def save_and_print_results(script_name, Vx, Vy, IS, NS, MS, SS_SAA, opt_f, elaps
     print(f"Costs: {float(opt_f)}, gap: {gap}")
     print(f"Elapsed time: {elapsed_time} seconds.")
 
-def save_detailed_results(script_name, Vx, Vy, opt_f, elapsed_time, start_row=1, sheet_name='details'):
-    """
-    Save the detailed computation results to an Excel file.
+# def save_detailed_results(script_name, Output_file, Vx, Vy, opt_f, elapsed_time, start_row=1, sheet_name='details'):
+#     """
+#     Save the detailed computation results to an Excel file.
 
-    :param filename: str, name of the Excel file.
-    :param script_name: str, name of the script/method used.
-    :param Vx: list, location data.
-    :param Vy: list, inventory data.
-    :param elapsed_time: float, elapsed time of the computation.
-    :param start_row: int, start row for the first DataFrame.
-    :param sheet_name: str, sheet name to write the data into.
-    """
-    # 创建DataFrame来组织数据
-    costs_df = pd.DataFrame([[script_name, elapsed_time, opt_f]])
-    location_df = pd.DataFrame(Vx)
-    inventory_df = pd.DataFrame(Vy).T
-    elapsed_time_df = pd.DataFrame([['Elapsed time', elapsed_time]])
+#     :param filename: str, name of the Excel file.
+#     :param script_name: str, name of the script/method used.
+#     :param Vx: list, location data.
+#     :param Vy: list, inventory data.
+#     :param elapsed_time: float, elapsed time of the computation.
+#     :param start_row: int, start row for the first DataFrame.
+#     :param sheet_name: str, sheet name to write the data into.
+#     """
+#     # 创建DataFrame来组织数据
+#     costs_df = pd.DataFrame([[script_name, elapsed_time, opt_f]])
+#     location_df = pd.DataFrame(Vx)
+#     inventory_df = pd.DataFrame(Vy).T
+#     elapsed_time_df = pd.DataFrame([['Elapsed time', elapsed_time]])
 
-    # Save costs data
-    append_df_to_excel(config.Output_file, costs_df, sheet_name=sheet_name, index=False, header=False, startrow=start_row)
+#     # Save costs data
+#     append_df_to_excel(Output_file, costs_df, sheet_name=sheet_name, index=False, header=False, startrow=start_row)
 
-    # Calculate next start column for location data
-    location_startcol = costs_df.shape[1] + 2  # Assuming 2 column gap for readability
-    append_df_to_excel(config.Output_file, location_df, sheet_name=sheet_name, index=True, header=True, startrow=start_row, startcol=location_startcol)
+#     # Calculate next start column for location data
+#     location_startcol = costs_df.shape[1] + 2  # Assuming 2 column gap for readability
+#     append_df_to_excel(Output_file, location_df, sheet_name=sheet_name, index=True, header=True, startrow=start_row, startcol=location_startcol)
 
-    # Calculate next start column for inventory data
-    inventory_startcol = location_startcol + location_df.shape[1] + 2  # Assuming 2 column gap for readability
-    append_df_to_excel(config.Output_file, inventory_df, sheet_name=sheet_name, index=True, header=True, startrow=start_row, startcol=inventory_startcol)
+#     # Calculate next start column for inventory data
+#     inventory_startcol = location_startcol + location_df.shape[1] + 2  # Assuming 2 column gap for readability
+#     append_df_to_excel(Output_file, inventory_df, sheet_name=sheet_name, index=True, header=True, startrow=start_row, startcol=inventory_startcol)
 
-    # Calculate start row for elapsed time data
-    elapsed_time_startrow = start_row + max(costs_df.shape[0], inventory_df.shape[0], location_df.shape[0]) + 2  # Assuming 2 row gap for readability
-    append_df_to_excel(config.Output_file, elapsed_time_df, sheet_name=sheet_name, index=True, header=True, startrow=elapsed_time_startrow)
+#     # Calculate start row for elapsed time data
+#     elapsed_time_startrow = start_row + max(costs_df.shape[0], inventory_df.shape[0], location_df.shape[0]) + 2  # Assuming 2 row gap for readability
+#     append_df_to_excel(Output_file, elapsed_time_df, sheet_name=sheet_name, index=True, header=True, startrow=elapsed_time_startrow)
     
-    print("Detailed results have been saved to Excel.")
+#     print("Detailed results have been saved to Excel.")

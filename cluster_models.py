@@ -1,4 +1,3 @@
-import config
 
 def apply_kmeans_clustering(demand, n_clusters, init='k-means++', random_state=0):
     from sklearn.cluster import KMeans
