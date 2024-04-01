@@ -127,41 +127,6 @@ def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None ,index=F
     # Save the workbook
     wb.save(filename)
 
-def save_detailed_results(script_name, Vx, Vy, elapsed_time, start_row=1, sheet_name='result'):
-    """
-    Save the detailed computation results to an Excel file.
-
-    :param filename: str, name of the Excel file.
-    :param script_name: str, name of the script/method used.
-    :param Vx: list, location data.
-    :param Vy: list, inventory data.
-    :param elapsed_time: float, elapsed time of the computation.
-    :param start_row: int, start row for the first DataFrame.
-    :param sheet_name: str, sheet name to write the data into.
-    """
-    # 创建DataFrame来组织数据
-    costs_df = pd.DataFrame([[script_name, elapsed_time]], columns=['Method', 'Costs'])
-    location_df = pd.DataFrame(Vx)
-    inventory_df = pd.DataFrame(Vy).T
-    elapsed_time_df = pd.DataFrame([['Elapsed time', elapsed_time]])
-
-    # Save costs data
-    append_df_to_excel(config.Input_file, costs_df, sheet_name=sheet_name, index=False, header=False, startrow=start_row)
-
-    # Calculate next start column for location data
-    location_startcol = costs_df.shape[1] + 2  # Assuming 2 column gap for readability
-    append_df_to_excel(config.Input_file, location_df, sheet_name=sheet_name, index=True, header=True, startrow=start_row, startcol=location_startcol)
-
-    # Calculate next start column for inventory data
-    inventory_startcol = location_startcol + location_df.shape[1] + 2  # Assuming 2 column gap for readability
-    append_df_to_excel(config.Input_file, inventory_df, sheet_name=sheet_name, index=True, header=True, startrow=start_row, startcol=inventory_startcol)
-
-    # Calculate start row for elapsed time data
-    elapsed_time_startrow = start_row + max(costs_df.shape[0], inventory_df.shape[0], location_df.shape[0]) + 2  # Assuming 2 row gap for readability
-    append_df_to_excel(config.Input_file, elapsed_time_df, sheet_name=sheet_name, index=True, header=True, startrow=elapsed_time_startrow)
-    
-    print("Detailed results have been saved to Excel.")
-
 def plot_cluster_sampling(demand_transformed, cluster_labels, sample, save_directory, script_name, m):
     
     # 绘制聚类结果和分层采样的样本点
@@ -339,7 +304,7 @@ def calculate_gap(ff, MS, gurobi_opt):
 
     return gap_percentage
 
-def save_and_print_results(script_name, IS, NS, MS, SS_SAA, opt_f, elapsed_time, cluster_num = 0, gap = 0):
+def save_and_print_results(script_name, Vx, Vy, IS, NS, MS, SS_SAA, opt_f, elapsed_time, cluster_num = 0, gap = 0):
     """
     Save results to an Excel file and print them.
 
@@ -351,12 +316,68 @@ def save_and_print_results(script_name, IS, NS, MS, SS_SAA, opt_f, elapsed_time,
     """
     # 创建一个DataFrame来组织需要输出的数据
     result_df = pd.DataFrame([[script_name, IS, NS, MS, SS_SAA, float(opt_f), elapsed_time, cluster_num, gap]])
+    detail_df = pd.DataFrame([[script_name, IS, NS, MS, SS_SAA, float(opt_f), elapsed_time, gap]])
 
     # 将数据输出到Excel的特定列，只有一列
     append_df_to_excel(config.Output_file, result_df, sheet_name='results', index=False, header=False, startrow=0)
+
+    location_df = pd.DataFrame(Vx)
+    inventory_df = pd.DataFrame(Vy).T
+    
+    start_row = 1
+
+    # Save costs data
+    append_df_to_excel(config.Output_file, detail_df, sheet_name='details', index=False, header=False, startrow=0)
+
+    # Calculate next start column for location data
+    location_startcol = detail_df.shape[1] + 2  # Assuming 2 column gap for readability
+    append_df_to_excel(config.Output_file, location_df, sheet_name='details', index=True, header=True, startrow=start_row, startcol=location_startcol)
+
+    # Calculate next start column for inventory data
+    inventory_startcol = location_startcol + location_df.shape[1] + 2  # Assuming 2 column gap for readability
+    append_df_to_excel(config.Output_file, inventory_df, sheet_name='details', index=True, header=True, startrow=start_row, startcol=inventory_startcol)
+
+    # # Calculate start row for elapsed time data
+    # elapsed_time_startrow = start_row + max(detail_df.shape[0], inventory_df.shape[0], location_df.shape[0]) + 2  # Assuming 2 row gap for readability
+    # append_df_to_excel(config.Output_file, elapsed_time_df, sheet_name='details', index=True, header=True, startrow=elapsed_time_startrow)
 
     # 打印结果
     print(f"Method: {script_name}")
     print(f"I: {IS}, S: {NS}, M: {MS}, N: {SS_SAA}, clustering_num: {cluster_num}")    
     print(f"Costs: {float(opt_f)}, gap: {gap}")
     print(f"Elapsed time: {elapsed_time} seconds.")
+
+def save_detailed_results(script_name, Vx, Vy, opt_f, elapsed_time, start_row=1, sheet_name='details'):
+    """
+    Save the detailed computation results to an Excel file.
+
+    :param filename: str, name of the Excel file.
+    :param script_name: str, name of the script/method used.
+    :param Vx: list, location data.
+    :param Vy: list, inventory data.
+    :param elapsed_time: float, elapsed time of the computation.
+    :param start_row: int, start row for the first DataFrame.
+    :param sheet_name: str, sheet name to write the data into.
+    """
+    # 创建DataFrame来组织数据
+    costs_df = pd.DataFrame([[script_name, elapsed_time, opt_f]])
+    location_df = pd.DataFrame(Vx)
+    inventory_df = pd.DataFrame(Vy).T
+    elapsed_time_df = pd.DataFrame([['Elapsed time', elapsed_time]])
+
+    # Save costs data
+    append_df_to_excel(config.Output_file, costs_df, sheet_name=sheet_name, index=False, header=False, startrow=start_row)
+
+    # Calculate next start column for location data
+    location_startcol = costs_df.shape[1] + 2  # Assuming 2 column gap for readability
+    append_df_to_excel(config.Output_file, location_df, sheet_name=sheet_name, index=True, header=True, startrow=start_row, startcol=location_startcol)
+
+    # Calculate next start column for inventory data
+    inventory_startcol = location_startcol + location_df.shape[1] + 2  # Assuming 2 column gap for readability
+    append_df_to_excel(config.Output_file, inventory_df, sheet_name=sheet_name, index=True, header=True, startrow=start_row, startcol=inventory_startcol)
+
+    # Calculate start row for elapsed time data
+    elapsed_time_startrow = start_row + max(costs_df.shape[0], inventory_df.shape[0], location_df.shape[0]) + 2  # Assuming 2 row gap for readability
+    append_df_to_excel(config.Output_file, elapsed_time_df, sheet_name=sheet_name, index=True, header=True, startrow=elapsed_time_startrow)
+    
+    print("Detailed results have been saved to Excel.")

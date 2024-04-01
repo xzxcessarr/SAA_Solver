@@ -153,16 +153,7 @@ if m.status == GRB.OPTIMAL:
     elapsed_time = toc - tic
 
     save_and_print_results(script_name, config.IS, config.NS, config.MS, config.SS_SAA, Vf, elapsed_time)
-
-    # save_detailed_results(
-    #     filename='data.xlsx',  # The target Excel file
-    #     script_name=script_name,               # The script/method name used for the computation
-    #     Vx=Vx,                                # The location data
-    #     Vy=Vy,                                # The inventory data
-    #     elapsed_time=elapsed_time,            # The elapsed time of the computation
-    #     start_row=1,                          # The starting row in the Excel sheet
-    #     sheet_name='result'         # The sheet name in the Excel file
-    # )
+    save_detailed_results(script_name, Vx, Vy, Vf, elapsed_time)
 
 else:
     print('Hmm, something went wrong!')

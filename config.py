@@ -3,11 +3,11 @@
 Configuration and data reading method for the two-stage SP model
 """
 # 参数
-IS = 20  # Set of locations
+IS = 40  # Set of locations
 AS = 3  # Set of item types
 LS = 3  # Set of size categories
-NS = 500  # Scenario样本总量
-SS_SAA = 25  # Scenario number of samples单个样本容量
+NS = 200  # Scenario样本总量
+SS_SAA = 20  # Scenario number of samples单个样本容量
 MS = 10  # Sample number样本数量
 Water = 1
 Food = 0.25
@@ -15,7 +15,7 @@ Medicine = 0.125
 Input_file = 'input/data.xlsx'
 Output_file = 'result.xlsx'
 Graphs_sample_save_directory = "./Graphs"
-gurobi_opt = 124324070.737138
+gurobi_opt = 60704072.1222051
 n_clusters = 10
 
 # 数据降维处理配置

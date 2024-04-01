@@ -9,7 +9,7 @@ from data_preprocess import *
 from sample_models import *
 from cluster_models import *
 
-def solver(DATA_PROCESS_METHOD, CLUSTER_METHOD, SAMPLE_GENERATE_METHOD, DIM_REDUCTION_METHOD):
+def solver(DATA_PROCESS_METHOD, CLUSTER_METHOD, SAMPLE_GENERATE_METHOD, DIM_REDUCTION_METHOD, IS, AS, LS, NS, MS, SS_SAA):
     tic = time.perf_counter()
 
     # 使用config.py中的参数
@@ -132,8 +132,7 @@ def solver(DATA_PROCESS_METHOD, CLUSTER_METHOD, SAMPLE_GENERATE_METHOD, DIM_REDU
 
     # gap_percentage = calculate_gap(ff, MS, config.gurobi_opt)
     gap = float((opt_f - config.gurobi_opt) / config.gurobi_opt * 100)
-    save_and_print_results(script_name, config.IS, config.NS, config.MS, config.SS_SAA, opt_f, elapsed_time, cluster_num, gap)
-
+    save_and_print_results(script_name, Vx, Vy, config.IS, config.NS, config.MS, config.SS_SAA, opt_f, elapsed_time, cluster_num, gap)
 
 if __name__ == "__main__":
     solver('pca','kmeans','Stratified','2d')
