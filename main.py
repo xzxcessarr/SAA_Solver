@@ -97,7 +97,7 @@ def two_stage_sp_model(IS_init, NS_init, Input_file, Output_file):
             m.setObjective((f), GRB.MINIMIZE)
 
             #output result within given time
-            m.setParam('TimeLimit', 3600)
+            m.setParam('TimeLimit', 6000)
 
             print('solving ...\n')
 
