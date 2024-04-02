@@ -201,7 +201,13 @@ def solver(DATA_PROCESS_METHOD, CLUSTER_METHOD, SAMPLE_GENERATE_METHOD, GRAPH_ME
     )
     demand_transformed, _, _ = grapher_processor.apply_reduction(demand)
 
-    generate_cluster_plots(demand_transformed, cluster_labels, Graphs_cluster_save_directory, script_name, GRAPH_METHOD)
+    # 检查Graphs_cluster_save_directory是否为空或None
+    if Graphs_cluster_save_directory and Graphs_cluster_save_directory.strip():
+        # 如果Graphs_cluster_save_directory不是空字符串或None，则执行函数
+        generate_cluster_plots(demand_transformed, cluster_labels, Graphs_cluster_save_directory, script_name, GRAPH_METHOD)
+    else:
+        # 如果Graphs_cluster_save_directory是空字符串或None，则跳过执行
+        print("Cluster plots generation skipped due to empty or None Graphs_cluster_save_directory.")
 
     for m in range(MS):
 
@@ -265,7 +271,14 @@ def solver(DATA_PROCESS_METHOD, CLUSTER_METHOD, SAMPLE_GENERATE_METHOD, GRAPH_ME
     toc = time.perf_counter()
     elapsed_time = toc - tic
 
-    generate_sample_plots(demand_transformed, samples_info, cluster_labels, Graphs_sample_save_directory, GRAPH_METHOD)
+    # 检查Graphs_sample_save_directory是否为空或None
+    if Graphs_sample_save_directory and Graphs_sample_save_directory.strip():
+        # 如果Graphs_sample_save_directory不是空字符串或None，则执行函数
+        generate_sample_plots(demand_transformed, samples_info, cluster_labels, Graphs_sample_save_directory, GRAPH_METHOD)
+    else:
+        # 如果Graphs_sample_save_directory是空字符串或None，则跳过执行
+        print("Sample plots generation skipped due to empty or None Graphs_sample_save_directory.")
+
 
     # gap_percentage = calculate_gap(ff, MS, gurobi_opt)
     gap = float((opt_f - gurobi_opt) / gurobi_opt * 100)
