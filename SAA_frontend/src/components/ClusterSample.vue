@@ -1,109 +1,47 @@
 <template>
-  <div class="cluster-sample">
-    <div v-for="(imgUrl, index) in displayedImgUrls" :key="index" class="image-wrapper">
-      <el-image
-        :src="imgUrl"
-        fit="cover"
-        :preview-src-list="displayedImgUrls"
-        :initial-index="index"
-        :hide-on-click-modal="true"
-        :close-on-press-escape="true"
-      >
-        <template #placeholder>
-          <div class="image-slot">
-            <el-icon><icon-picture /></el-icon>
-          </div>
-        </template>
-        <template #error>
-          <div class="image-slot">
-            <el-icon><icon-picture /></el-icon>
-          </div>
-        </template>
-      </el-image>
-    </div>
-  </div>
+  <photo-provider>
+    <photo-consumer v-for="src in imageUrls" :intro="src" :key="src" :src="src">
+      <img :src="src" class="view-box">
+    </photo-consumer>
+  </photo-provider>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-import { ElImage } from 'element-plus';
-import { Picture as IconPicture } from '@element-plus/icons-vue';
-import defaultImg from '@/assets/爱丽丝之神-02.jpg';
 
-const defaultImgUrls = [
-  defaultImg,
-  defaultImg,
-  defaultImg,
-  defaultImg,
-];
+<script lang="ts">
+import { defineComponent, onMounted, ref } from 'vue';
 
-const onlineImgUrls = [
-  'https://gitee.com/swjtuai/agvc/raw/agvc-test/test1-230810.png',
-  'https://gitee.com/swjtuai/agvc/raw/agvc-test/test2-230810.png',
+export default defineComponent({
+  name: 'ViewerComponent',
+  setup() {
+    const imageUrls = ref([
+      // 这里放置图片URL
+      '/src/assets/爱丽丝之神-02.jpg',
+      '/src/assets/爱丽丝之神-02.jpg',
+      '/src/assets/爱丽丝之神-02.jpg',
+    ]);
 
-  'https://gitee.com/swjtuai/agvc/raw/agvc-test/test1-230810.png',
-  'https://gitee.com/swjtuai/agvc/raw/agvc-test/test2-230810.png',
-];
+    onMounted(() => {
+    });
 
-const displayedImgUrls = ref<string[]>([...defaultImgUrls, ...onlineImgUrls]);
-
-// const fetchImages = async () => {
-//   try {
-//     const response = await axios.get('/solver-callback');
-//     const sampleImages = [
-//       `${response.data.graphs_sample_save_directory}/sample_image1.png`,
-//       `${response.data.graphs_sample_save_directory}/sample_image2.png`,
-//     ];
-//     const clusterImages = [
-//       `${response.data.graphs_cluster_save_directory}/cluster_image1.png`,
-//       `${response.data.graphs_cluster_save_directory}/cluster_image2.png`,
-//     ];
-//     imgUrls.value = [...sampleImages, ...clusterImages];
-//   } catch (error) {
-//     console.error('Error fetching images:', error);
-//   }
-// };
-
-// onMounted(() => {
-//   fetchImages();
-// });
-
-// watch(imgUrls, (newUrls) => {
-//   if (newUrls.length > 0) {
-//     displayedImgUrls.value = newUrls;
-//   }
-// });
+    return {
+      imageUrls
+    };
+  },
+});
 </script>
+
 
 <style scoped>
 .cluster-sample {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+  flex-wrap: nowrap; /* 防止内容换行 */
+  overflow-x: auto;  /* 当内容超出时，可以横向滚动 */
+  gap: 10px;        /* 图片之间的间隔 */
+  padding: 10px 0;  /* 上下的内边距 */
 }
 
-.image-wrapper {
-  width: 200px;
-  height: 200px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.image-wrapper .el-image {
-  width: 100%;
-  height: 100%;
-}
-
-.image-slot {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background-color: #f5f7fa;
-  color: #909399;
-  font-size: 30px;
+.view-box {
+  flex: 0 0 auto; /* flex-grow: 0, flex-shrink: 0, flex-basis: auto */
+  height: 100%;   /* 图片高度填充父容器高度 */
 }
 </style>

@@ -3,10 +3,23 @@
     <header class="app-header">
       <h1>数据分析与可视化</h1>
     </header>
-    <main class="app-main">
-      <ConfigSelect @form-submitted="handleFormSubmit" />
+    <el-row>
+      <el-col :span="12">
+        <ConfigSelect @form-submitted="handleFormSubmit" />
+      </el-col>
+      <el-col :span="12">
       <EchartsDraw :form-submitted="formSubmitted" />
-      <ClusterSample/>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="8">
+      <ClusterSample />
+      </el-col>
+    </el-row>
+    <main class="app-main">
+
+      
+
     </main>
     <footer class="app-footer">
       <p>&copy; 2023 数据分析与可视化. All rights reserved.</p>

@@ -5,7 +5,6 @@ import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import { fileURLToPath, URL } from 'node:url'
 
-
 export default defineConfig({
   plugins: [
     vue(),
