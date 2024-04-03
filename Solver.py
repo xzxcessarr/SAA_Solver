@@ -3,11 +3,11 @@ import os
 
 # 定义脚本参数
 IS_NS_MS_SS_SAA_combinations = [
-    # (20, 100, 10, 10),
-    # (20, 200, 10, 20),
-    # (20, 500, 10, 25),
-    # (40, 100, 10, 10),
-    # (40, 200, 10, 20),
+    (20, 100, 10, 10),
+    (20, 200, 10, 20),
+    (20, 500, 10, 25),
+    (40, 100, 10, 10),
+    (40, 200, 10, 20),
     (40, 500, 10, 25)
 ]
 
@@ -19,6 +19,9 @@ sample_generate_methods = ['Stratified', 'Simple']
 dim_reduction_methods = ['2d', '3d']
 
 max_attempts = 2
+Input_file='input/data.xlsx'
+Output_file='result.xlsx'
+
 
 for IS, NS, MS, SS_SAA in IS_NS_MS_SS_SAA_combinations:
     print(f"计算参数组合: IS={IS}, NS={NS}, MS={MS}, SS_SAA={SS_SAA}")
@@ -27,8 +30,8 @@ for IS, NS, MS, SS_SAA in IS_NS_MS_SS_SAA_combinations:
     gurobi_opt = two_stage_sp_model(
         IS_init=IS, 
         NS_init=NS, 
-        Input_file='input/data.xlsx',
-        Output_file='result.xlsx'
+        Input_file=Input_file,
+        Output_file=Output_file
     )
     print(f"gurobi_opt的计算结果是: {gurobi_opt}")
     
@@ -62,8 +65,8 @@ for IS, NS, MS, SS_SAA in IS_NS_MS_SS_SAA_combinations:
                         SS_SAA=SS_SAA,
                         Graphs_sample_save_directory=graphs_sample_save_directory,
                         Graphs_cluster_save_directory=graphs_cluster_save_directory,
-                        Input_file='input/data.xlsx',
-                        Output_file='result.xlsx',
+                        Input_file=Input_file,
+                        Output_file=Output_file,
                         gurobi_opt=gurobi_opt
                     )
                     break
