@@ -3,7 +3,7 @@ import numpy as np
 def apply_pca(demand, n_components=0.99):
     from sklearn.decomposition import PCA
     """
-    应用PCA进行降维。
+    应用PCA进行降维，适用于稠密数据集。
     
     参数:
     data -- 待降维的数据，应为二维NumPy数组。
@@ -12,7 +12,7 @@ def apply_pca(demand, n_components=0.99):
     返回:
     pca_result -- PCA降维后的数据。
     """
-    pca = PCA(n_components=n_components)
+    pca = PCA(n_components=n_components, svd_solver="auto")
     pca_demand = pca.fit_transform(demand)
     return pca_demand, pca.n_components_, "PCA"
 
@@ -20,7 +20,7 @@ def apply_truncated_svd(demand, n_components=0.99):
     from sklearn.decomposition import TruncatedSVD
     from scipy.sparse import csr_matrix
     """
-    应用TruncatedSVD进行降维。
+    应用TruncatedSVD进行降维，适用于稀疏数据集，参考数据优先使用这个方法。
     
     参数:
     data -- 待降维的数据，应为二维NumPy数组或类似数组的数据结构。

@@ -84,8 +84,20 @@ def apply_som_clustering(demand, x=5, y=3, sigma=0.7, learning_rate=0.5, num_ite
     from minisom import MiniSom
     import numpy as np
     
+    # x (int): 网格宽度，即 SOM 的 X 维度。
+    # y (int): 网格高度，即 SOM 的 Y 维度。
+    # input_len (int): 输入向量的维数。
+    # sigma (float, optional): 高斯函数的标准差，用于调整邻域函数的范围，通常设置为网格大小的一部分。
+    # learning_rate (float, optional): 学习速率，用于在学习过程中更新权重。
+    # decay_function (callable, optional): 随着时间变化调整学习速率和邻域函数的函数。
+    # neighborhood_function (str, optional): 邻域函数的类型，通常是 'gaussian' 或 'mexican_hat'。
+    # topology (str, optional): 网格的拓扑结构，可以是 'rectangular' 或 'hexagonal'。
+    # activation_distance (str, optional): 计算激活距离的方法，通常是 'euclidean' 或 'cosine'。
+    # random_seed (int, optional): 随机数生成器的种子，用于复现结果。
+
     # 初始化并训练Self-Organizing Map(SOM)
     som = MiniSom(x=x, y=y, input_len=demand.shape[1], sigma=sigma, learning_rate=learning_rate)
+    som.random_weights_init(data=demand)
     som.train_random(data=demand, num_iteration=num_iteration)
 
     # 获取每个样本的获胜神经元

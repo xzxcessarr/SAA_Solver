@@ -57,7 +57,7 @@ for IS, NS, MS, SS_SAA in IS_NS_MS_SS_SAA_combinations:
                     solver(
                         DATA_PROCESS_METHOD=data_process,
                         CLUSTER_METHOD=cluster,
-                        SAMPLE_GENERATE_METHOD='Stratified',
+                        SAMPLE_GENERATE_METHOD='Simple',
                         GRAPH_METHOD='3d',
                         IS=IS,
                         NS=NS,

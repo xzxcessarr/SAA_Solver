@@ -55,6 +55,7 @@
 import { ref } from 'vue';
 import { ElForm, ElFormItem, ElSelect, ElOption, ElInputNumber, ElButton } from 'element-plus';
 import axios from 'axios';
+import {type IS_option_list} from '@/interfaces/index'
 
 const emit = defineEmits(['formSubmitted']);
 
@@ -70,7 +71,7 @@ const formData = ref({
   max_attempts: 2,
 });
 
-const IS_options = [
+const IS_options:IS_option_list = [
   { value: '20', label: 'IS=20' },
   { value: '40', label: 'IS=40' },
 ];
