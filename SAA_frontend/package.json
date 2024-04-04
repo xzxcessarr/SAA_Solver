@@ -18,11 +18,8 @@
     "element-plus": "^2.6.3",
     "unplugin-auto-import": "^0.17.5",
     "unplugin-vue-components": "^0.26.0",
-    "v-viewer": "next",
-    "viewerjs": "^1.11.6",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0",
-    "vue3-photo-preview": "^0.3.0"
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",

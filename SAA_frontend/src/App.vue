@@ -1,23 +1,20 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <el-col :span="12">
-        <ConfigSelect @form-submitted="handleFormSubmit" />
-      </el-col>
-      <el-col :span="12">
+    <header class="app-header">
+      <h1>数据分析与可视化</h1>
+    </header>
+    <main class="app-main">
+      <ConfigSelect @form-submitted="handleFormSubmit" />
       <EchartsDraw :form-submitted="formSubmitted" />
-      </el-col>
-    </el-row>
-    <el-row>
-      <ClusterSample />
-    </el-row>
+      <ClusterSample/>
+    </main>
     <footer class="app-footer">
       <p>&copy; 2023 数据分析与可视化. All rights reserved.</p>
     </footer>
   </div>
 </template>
 
-<script setup lang="ts" name="App">
+<script setup lang="ts">
 import { ref } from 'vue';
 import ConfigSelect from './components/ConfigSelect.vue';
 import EchartsDraw from './components/EchartsDraw.vue';
@@ -53,5 +50,4 @@ const handleFormSubmit = () => {
   padding: 20px;
   text-align: center;
 }
-
 </style>

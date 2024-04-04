@@ -285,21 +285,21 @@ def solver(DATA_PROCESS_METHOD, CLUSTER_METHOD, SAMPLE_GENERATE_METHOD, GRAPH_ME
     save_and_print_results(script_name, Output_file, Vx, Vy, IS, NS, MS, SS_SAA, opt_f, elapsed_time, cluster_num, gap)
 
 # if __name__ == "__main__":
-    #默认调用参数，仅测试时使用
+    # 默认调用参数，仅测试时使用
     # solver(
-    #     DATA_PROCESS_METHOD='pca',
+    #     DATA_PROCESS_METHOD='none',
     #     CLUSTER_METHOD='kmeans',
     #     SAMPLE_GENERATE_METHOD='Stratified',
     #     GRAPH_METHOD='3d',
     #     IS=20,
-    #     NS=100,
+    #     NS=500,
     #     MS=10,
-    #     SS_SAA=10,
+    #     SS_SAA=50,
     #     Graphs_sample_save_directory='./Graphs',
     #     Graphs_cluster_save_directory='./Graphs',
     #     Input_file='input/data.xlsx',
     #     Output_file='result.xlsx',
-    #     gurobi_opt=60704072.1222051
+    #     gurobi_opt=71066366.3519977
     # )
     # gurobi_opt = two_stage_sp_model(
     #     IS_init=20, 
