@@ -27,8 +27,8 @@ const updateChart = () => {
 
   const chartData = [
     {
-      x: [0, 5, 5, 0],
-      y: [0, 0, 5, 5],
+      x: [1, 50, 5, 0],
+      y: [1, 1, 5, 5],
       marker: {
         color: ['#0f0', '#ff0', '#f00', '#00f'],
         size: [20, 50, 35, 10],
@@ -115,6 +115,6 @@ watch(
 <style scoped>
 .chart-container {
   width: 200%;
-  height: 400px;
+  height: 500px;
 }
 </style>

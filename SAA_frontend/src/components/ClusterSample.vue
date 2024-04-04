@@ -1,9 +1,11 @@
 <template>
+  <div class="cluster-sample">
   <photo-provider>
     <photo-consumer v-for="src in imageUrls" :intro="src" :key="src" :src="src">
       <img :src="src" class="view-box">
     </photo-consumer>
   </photo-provider>
+</div>
 </template>
 
 
@@ -41,7 +43,13 @@ export default defineComponent({
 }
 
 .view-box {
+  width: 200px;    /* 设置缩略图的宽度 */
+  height: auto;    /* 高度自动，保持图片比例 */
+  cursor: pointer; /* 鼠标悬停时显示手型指针 */
+  object-fit: cover;
   flex: 0 0 auto; /* flex-grow: 0, flex-shrink: 0, flex-basis: auto */
   height: 100%;   /* 图片高度填充父容器高度 */
+  object-fit: cover; /* 或者使用 'contain' 以保持图片的比例 */
 }
+
 </style>
