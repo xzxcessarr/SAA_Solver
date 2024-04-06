@@ -47,7 +47,7 @@ function changeEcharts() {
 
 <style scoped>
 .chart-container {
-  width: 100%;
+  width: 200%;
   height: 400px;
 }
 </style>

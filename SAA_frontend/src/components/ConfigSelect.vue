@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="form-container">
     <el-form :model="formData" label-width="150px">
       <el-form-item label="IS:">
@@ -126,4 +126,124 @@ const submitForm = async () => {
     console.error('Error:', error);
   }
 };
+</script> -->
+
+<template>
+  <div class="config-select-container">
+    <!-- 行内排列的表单字段 -->
+    <el-row :gutter="20">
+      <el-col :span="6">
+        <el-form-item label="IS:">
+          <el-select v-model="formData.IS" placeholder="请选择IS">
+            <!-- 这里添加选项 -->
+            <el-option
+              v-for="item in ISOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="6">
+        <el-form-item label="NS:">
+          <el-select v-model="formData.NS" placeholder="请选择NS">
+            <!-- 这里添加选项 -->
+            <el-option
+              v-for="item in NSOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="6">
+        <el-form-item label="MS:">
+          <el-select v-model="formData.MS" placeholder="请选择MS">
+            <!-- 这里添加选项 -->
+            <el-option
+              v-for="item in MSOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="6">
+        <el-form-item label="SS_SAA:">
+          <el-select v-model="formData.SS_SAA" placeholder="请选择SS_SAA">
+            <!-- 这里添加选项 -->
+            <el-option
+              v-for="item in SS_SAAOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <!-- 图片选择的方法 -->
+    <method-selector label="数据处理方法" v-model="formData.dataProcessingMethod" :options="dataProcessingOptions"></method-selector>
+    <method-selector label="聚类方法" v-model="formData.clusteringMethod" :options="clusteringOptions"></method-selector>
+    <method-selector label="样本生成方法" v-model="formData.sampleGenerationMethod" :options="sampleGenerationOptions"></method-selector>
+    <!-- 最大尝试次数的表单字段 -->
+    <el-form-item label="最大尝试次数:">
+      <el-input-number v-model="formData.maxAttempts" :min="1"></el-input-number>
+    </el-form-item>
+    <!-- 提交按钮 -->
+    <el-form-item>
+      <el-button type="primary" @click="submitForm">提交</el-button>
+    </el-form-item>
+  </div>
+</template>
+
+<script setup>
+import { reactive } from 'vue';
+import MethodSelector from './MethodSelect.vue';
+
+// 假设这些选项是您希望用户从中选择的
+const ISOptions = [{ value: 'option1', label: '选项1' }, /* ...更多选项 */];
+const NSOptions = [{ value: 'option2', label: '选项2' }, /* ...更多选项 */];
+const MSOptions = [{ value: 'option3', label: '选项3' }, /* ...更多选项 */];
+const SS_SAAOptions = [{ value: 'option4', label: '选项4' }, /* ...更多选项 */];
+
+// 方法选择器的选项
+const dataProcessingOptions = [{ imageUrl: 'url1', text: '处理方法1' }, /* ...更多选项 */];
+const clusteringOptions = [{ imageUrl: 'url2', text: '聚类方法1' }, /* ...更多选项 */];
+const sampleGenerationOptions = [{ imageUrl: 'url3', text: '生成方法1' }, /* ...更多选项 */];
+
+const formData = reactive({
+  IS: '',
+  NS: '',
+  MS: '',
+  SS_SAA: '',
+  dataProcessingMethod: '',
+  clusteringMethod: '',
+  sampleGenerationMethod: '',
+  maxAttempts: 1
+});
+
+const submitForm = () => {
+  // 提交表单的逻辑
+  console.log('Form submitted:', formData);
+};
 </script>
+
+<style scoped>
+.config-select-container {
+  /* 样式定义 */
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.el-form-item {
+  margin-bottom: 20px;
+}
+
+.el-row {
+  margin-bottom: 20px;
+}
+</style>

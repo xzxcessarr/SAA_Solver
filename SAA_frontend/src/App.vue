@@ -1,14 +1,13 @@
 <template>
   <div class="app-container">
     <el-row>
-      <el-col :span="12">
-        <ConfigSelect @form-submitted="handleFormSubmit" />
-      </el-col>
-      <el-col :span="12">
       <EchartsDraw :form-submitted="formSubmitted" />
-      </el-col>
     </el-row>
     <el-row>
+        <ConfigSelect @form-submitted="handleFormSubmit" />
+    </el-row>
+    <el-row>
+      
       <ClusterSample />
     </el-row>
     <footer class="app-footer">
