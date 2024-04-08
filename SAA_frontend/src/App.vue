@@ -1,14 +1,17 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <EchartsDraw :form-submitted="formSubmitted" />
-    </el-row>
-    <el-row>
-        <ConfigSelect @form-submitted="handleFormSubmit" />
-    </el-row>
-    <el-row>
-      
+
+    <!-- <el-row>
       <ClusterSample />
+    </el-row> -->
+    <el-row>
+      <WebSocket />
+    </el-row>
+    <!-- <el-row>
+      <EchartsDraw :form-submitted="formSubmitted" />
+    </el-row> -->
+    <el-row>
+      <ConfigSelect @form-submitted="handleFormSubmit" />
     </el-row>
     <footer class="app-footer">
       <p>&copy; 2023 数据分析与可视化. All rights reserved.</p>
@@ -21,6 +24,7 @@ import { ref } from 'vue';
 import ConfigSelect from './components/ConfigSelect.vue';
 import EchartsDraw from './components/EchartsDraw.vue';
 import ClusterSample from './components/ClusterSample.vue';
+import WebSocket from './components/WebSocket.vue';
 
 const formSubmitted = ref(false);
 
@@ -52,5 +56,4 @@ const handleFormSubmit = () => {
   padding: 20px;
   text-align: center;
 }
-
 </style>

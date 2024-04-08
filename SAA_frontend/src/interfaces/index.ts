@@ -1,5 +1,5 @@
 export interface IS_options {
-    value:string;
+    value:int;
     label:string;
 }
 

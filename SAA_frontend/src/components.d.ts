@@ -11,7 +11,6 @@ declare module 'vue' {
     ConfigSelect: typeof import('./components/ConfigSelect.vue')['default']
     EchartsDraw: typeof import('./components/EchartsDraw.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
-    ElCol: typeof import('element-plus/es')['ElCol']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
@@ -26,5 +25,6 @@ declare module 'vue' {
     MethodSelect: typeof import('./components/MethodSelect.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    WebSocket: typeof import('./components/WebSocket.vue')['default']
   }
 }

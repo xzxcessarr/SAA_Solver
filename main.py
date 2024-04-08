@@ -283,6 +283,7 @@ def solver(DATA_PROCESS_METHOD, CLUSTER_METHOD, SAMPLE_GENERATE_METHOD, GRAPH_ME
     # gap_percentage = calculate_gap(ff, MS, gurobi_opt)
     gap = float((opt_f - gurobi_opt) / gurobi_opt * 100)
     save_and_print_results(script_name, Output_file, Vx, Vy, IS, NS, MS, SS_SAA, opt_f, elapsed_time, cluster_num, gap)
+    return "success!"
 
 # if __name__ == "__main__":
     #默认调用参数，仅测试时使用
