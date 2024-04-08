@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
 
-    <!-- <el-row>
+    <el-row>
       <ClusterSample />
-    </el-row> -->
+    </el-row>
     <el-row>
       <WebSocket />
     </el-row>

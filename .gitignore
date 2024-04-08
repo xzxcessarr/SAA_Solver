@@ -17,8 +17,6 @@ coverage
 /cypress/videos/
 /cypress/screenshots/
 venv/
-node_modules/
-
 
 # Editor directories and files
 .vscode/*

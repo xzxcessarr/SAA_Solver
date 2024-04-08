@@ -1179,19 +1179,6 @@ unplugin@^1.4.0, unplugin@^1.5.1, unplugin@^1.6.0:
     webpack-sources "^3.2.3"
     webpack-virtual-modules "^0.6.1"
 
-v-viewer@next:
-  version "3.0.11"
-  resolved "https://registry.npmmirror.com/v-viewer/-/v-viewer-3.0.11.tgz#c03855eb56436bd0f5323c34a61c10fa8fd05026"
-  integrity sha512-E8LOdAxhzuktt4HB3PswVCccQ1Q1sYHYnLsS6zaJISpb5EvmAFs5sYNfXnDLFxVb5DQ82v4ZlGxkYlseXwWRJw==
-  dependencies:
-    lodash "^4.17.21"
-    viewerjs "^1.9.0"
-
-viewerjs@^1.11.6, viewerjs@^1.9.0:
-  version "1.11.6"
-  resolved "https://registry.npmmirror.com/viewerjs/-/viewerjs-1.11.6.tgz#19a1e78c15eba5a9fbbf34ebc5ab312d6e8932ed"
-  integrity sha512-TlhdSp2oEOLFXvEp4psKaeTjR5zBjTRcM/sHUN8PkV1UWuY8HKC8n7GaVdW5Xqnwdr/F1OmzLik1QwDjI4w/nw==
-
 vite@^5.1.6:
   version "5.2.7"
   resolved "https://registry.yarnpkg.com/vite/-/vite-5.2.7.tgz#e1b8a985eb54fcb9467d7f7f009d87485016df6e"
