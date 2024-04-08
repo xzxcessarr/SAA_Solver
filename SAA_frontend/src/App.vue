@@ -1,17 +1,16 @@
 <template>
   <div class="app-container">
-
-    <el-row>
-      <ClusterSample />
-    </el-row>
-    <el-row>
-      <WebSocket />
-    </el-row>
     <!-- <el-row>
-      <EchartsDraw :form-submitted="formSubmitted" />
+      <WebSocket />
     </el-row> -->
     <el-row>
+      <EchartsDraw :form-submitted="formSubmitted" />
+    </el-row>
+    <el-row>
       <ConfigSelect @form-submitted="handleFormSubmit" />
+    </el-row>
+    <el-row>
+      <ClusterSample />
     </el-row>
     <footer class="app-footer">
       <p>&copy; 2023 数据分析与可视化. All rights reserved.</p>
