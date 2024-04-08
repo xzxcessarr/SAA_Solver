@@ -20,6 +20,9 @@ export default defineComponent({
       '/src/assets/爱丽丝之神-02.jpg',
       '/src/assets/爱丽丝之神-02.jpg',
       '/src/assets/爱丽丝之神-02.jpg',
+      '/src/assets/爱丽丝之神-02.jpg',
+      '/src/assets/爱丽丝之神-02.jpg',
+      '/src/assets/爱丽丝之神-02.jpg',
     ]);
 
     onMounted(() => {

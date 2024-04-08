@@ -1,7 +1,9 @@
 <template>
   <div class="chart-container">
-    <div ref="chartRef" :style="{ width: '100%', height: '400px' }"></div>
-    <button @click="changeEcharts">更新</button>
+      <div ref="chartRef" :style="{ width: '100%', height: '400px' }"></div>
+    <el-row>
+      <button @click="changeEcharts">更新</button>
+    </el-row>
   </div>
 </template>
 
@@ -47,7 +49,7 @@ function changeEcharts() {
 
 <style scoped>
 .chart-container {
-  width: 200%;
+  width: 400%;
   height: 400px;
 }
 </style>
