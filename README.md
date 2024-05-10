@@ -10,7 +10,7 @@
 
 ## 系统框架图
 
-![系统原理图](https://gitee.com/cessarr/SAA_Solver/raw/master/%E7%B3%BB%E7%BB%9F%E5%8E%9F%E7%90%86%E5%9B%BE.jpg)
+![系统原理图](https://raw.githubusercontent.com/xzxcessarr/SAA_Solver/main/%E7%B3%BB%E7%BB%9F%E5%8E%9F%E7%90%86%E5%9B%BE.jpg)
 
 
 
