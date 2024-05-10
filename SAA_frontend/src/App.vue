@@ -1,58 +1,57 @@
 <template>
-  <div class="app-container">
-    <!-- <el-row>
-      <WebSocket />
-    </el-row> -->
-    <el-row>
-      <EchartsDraw :form-submitted="formSubmitted" />
-    </el-row>
-    <el-row>
-      <ConfigSelect @form-submitted="handleFormSubmit" />
-    </el-row>
-    <el-row>
-      <ClusterSample />
-    </el-row>
-    <footer class="app-footer">
-      <p>&copy; 2023 数据分析与可视化. All rights reserved.</p>
-    </footer>
+  <div class="app-container flex justify-center flex-col w-full">
+    <el-header class="px-5 py-3 h-8 w-full content-center">
+      <!-- 使用单选按钮组来替代步骤导航 -->
+      <el-radio-group v-model="step" class="flex justify-center">
+        <el-radio-button :label="1" class="step-button">数据选择</el-radio-button>
+        <el-radio-button :label="2" class="step-button">参数设置</el-radio-button>
+        <el-radio-button :label="3" class="step-button">计算结果</el-radio-button>
+      </el-radio-group>
+    </el-header>
+
+    <!-- 主内容区域 -->
+    <el-container class="flex w-full h-full">
+      <el-main class="flex-grow h-full w-full">
+        <router-view />
+        <div v-show="showLogs" class="mt-4">
+          <LogsWebSocket />
+        </div>
+      </el-main>
+    </el-container>
+
+    <!-- 控制面板和日志 -->
+    <el-footer class="px-5 py-3 h-12">
+      <div class="flex justify-center items-center space-x-4">
+        <el-row >
+          <el-switch v-model="showLogs" active-text="显示日志" inactive-text="隐藏日志"></el-switch>
+        </el-row>
+      </div>
+    </el-footer>
+    <p v-if="step < 4" class="text-center w-full mx-auto">&copy; 2024 SAA_Solver</p>
   </div>
 </template>
 
-<script setup lang="ts" name="App">
-import { ref } from 'vue';
-import ConfigSelect from './components/ConfigSelect.vue';
-import EchartsDraw from './components/EchartsDraw.vue';
-import ClusterSample from './components/ClusterSample.vue';
-import WebSocket from './components/WebSocket.vue';
+<script lang="ts" setup>
+import { ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import LogsWebSocket from '@/components/LogsWebSocket.vue';
 
-const formSubmitted = ref(false);
+const step = ref(2);
+const showLogs = ref(false);
+const router = useRouter();
 
-const handleFormSubmit = () => {
-  formSubmitted.value = true;
-};
+watch(step, (newValue) => {
+  switch (newValue) {
+    case 1:
+      
+      router.push({ name: 'DataConfig' });
+      break;
+    case 2:
+      router.push({ name: 'ConfigSolver' });
+      break;
+    case 3:
+      router.push({ name: 'ResultPage' });
+      break;
+  }
+});
 </script>
-
-<style scoped>
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.app-header {
-  background-color: #f5f5f5;
-  padding: 20px;
-  text-align: center;
-}
-
-.app-main {
-  flex: 1;
-  padding: 20px;
-}
-
-.app-footer {
-  background-color: #f5f5f5;
-  padding: 20px;
-  text-align: center;
-}
-</style>
