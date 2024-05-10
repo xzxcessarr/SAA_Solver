@@ -1,5 +1,7 @@
 # SAA-Solver求解器
 
+英文界面请[点击这里](https://github.com/xzxcessarr/SAA_Solver/blob/main/README.en.md)
+
 本代码遵循MIT协议开源，主要参考下面两篇论文实现：
 
 [1]Shaolong Hu, Zhijie Sasha Dong, Rui Dai. A machine learning based sample average approximation for supplier selection with option contract in humanitarian relief. Transportation Research Part E: Logistics and Transportation Review. 2024, Volume 186: 103531.
@@ -10,7 +12,7 @@
 
 ## 系统框架图
 
-![系统原理图](https://raw.githubusercontent.com/xzxcessarr/SAA_Solver/main/%E7%B3%BB%E7%BB%9F%E5%8E%9F%E7%90%86%E5%9B%BE.jpg)
+![系统原理图](https://raw.githubusercontent.com/xzxcessarr/SAA_Solver/main/%E7%B3%BB%E7%BB%9F%E5%8E%9F%E7%90%86%E5%9B%BE.jpg?token=GHSAT0AAAAAACSAUBCZTZ7TCCUDHVMHPCI6ZR6MCQQ)
 
 
 
