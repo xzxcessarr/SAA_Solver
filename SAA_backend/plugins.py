@@ -199,7 +199,7 @@ def read_data_from_redis(IS, NS, AS, Food, Medicine):
     CP = json.loads(r.get('CP'))
     CT = json.loads(r.get('CT'))
     CH = json.loads(r.get('CH'))
-    PU = json.loads(r.get('G'))
+    PU = json.loads(r.get('PU'))
     demand_raw = json.loads(r.get('demand_raw'))
 
     # 数据处理
@@ -225,7 +225,7 @@ def read_data_from_redis(IS, NS, AS, Food, Medicine):
 
 #     # 使用管道读取数据
 #     with r.pipeline() as pipe:
-#         for key in ['CF', 'U', 'V', 'CP', 'CT', 'CH', 'G']:
+#         for key in ['CF', 'U', 'V', 'CP', 'CT', 'CH', 'PU']:
 #             pipe.hget('cost_data', key)
 #         pipe.get('H')
 #         pipe.get('demand_raw')
