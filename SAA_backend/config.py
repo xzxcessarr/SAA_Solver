@@ -84,7 +84,8 @@ DATA_PROCESS_PARAMS = {
 # CLUSTER_METHOD = 'kmeans'  # 可选 'kmeans', 'spectral', 'optics', 'meanshift', 'gmm', 'dbscan', 'agglomerative', 'som'
 CLUSTER_PARAMS = {
    'kmeans': {'n_clusters': 10, 'init': 'k-means++', 'random_state': 0},
-   'spectral': {'n_clusters': 10, 'affinity': 'nearest_neighbors', 'n_neighbors': 10, 'random_state': 0},
+   # 'spectral': {'n_clusters': 10, 'affinity': 'nearest_neighbors', 'n_neighbors': 10, 'random_state': 0},
+   'spectral': {'n_clusters': 10, 'affinity': 'rbf', 'gamma': 1.0, 'random_state':0},
    'gmm': {'n_components': 10, 'covariance_type': 'full', 'random_state': 0},
    'agglomerative': {'n_clusters': 10, 'linkage': 'average'},
 

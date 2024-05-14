@@ -34,14 +34,37 @@ def apply_kmeans_clustering(demand, n_clusters, init='k-means++', random_state=0
     # 返回聚类标签和聚类方法名称
     return cluster.labels_, "kmeans++"
 
-def apply_spectral_clustering(demand, n_clusters, affinity='nearest_neighbors', n_neighbors=10, random_state=0):
+# def apply_spectral_clustering(demand, n_clusters, affinity='nearest_neighbors', n_neighbors=10, random_state=0):
+#     from sklearn.cluster import SpectralClustering
+#     """
+#     参数:
+#     demand: 数据集。
+#     n_clusters: 聚类数目。
+#     affinity: 亲和力类型，默认是 'nearest_neighbors'即KNN。
+#     n_neighbors: 邻居数，默认为10。
+#     random_state: 随机种子。
+#     返回:
+#     聚类标签。
+#     使用的聚类方法名称。
+#     """
+#     # 使用SpectralClustering算法进行聚类
+#     cluster = SpectralClustering(
+#         n_clusters=n_clusters, 
+#         affinity=affinity, 
+#         n_neighbors=n_neighbors, 
+#         random_state=random_state
+#     ).fit(demand)
+#     # 返回聚类标签和聚类方法名称
+#     return cluster.labels_, "Spectral"
+
+def apply_spectral_clustering(demand, n_clusters, affinity='rbf', gamma=1.0, random_state=0):
     from sklearn.cluster import SpectralClustering
     """
     参数:
     demand: 数据集。
     n_clusters: 聚类数目。
-    affinity: 亲和力类型，默认是 'nearest_neighbors'。
-    n_neighbors: 邻居数，默认为10。
+    affinity: 亲和力类型，默认是 'rbf' 即高斯核。
+    gamma: 高斯核的带宽参数，默认为1.0。
     random_state: 随机种子。
     返回:
     聚类标签。
@@ -51,7 +74,7 @@ def apply_spectral_clustering(demand, n_clusters, affinity='nearest_neighbors', 
     cluster = SpectralClustering(
         n_clusters=n_clusters, 
         affinity=affinity, 
-        n_neighbors=n_neighbors, 
+        gamma=gamma,
         random_state=random_state
     ).fit(demand)
     # 返回聚类标签和聚类方法名称
