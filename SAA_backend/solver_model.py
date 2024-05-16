@@ -668,12 +668,12 @@ if __name__ == "__main__":
     from config import *
     Input_data_path='data/raw_data.xlsx'
     NS_init=100
-    IS_init=40
+    IS_init=20
     store_data_to_redis(Input_data_path, IS_init, True)
     # 默认调用参数，仅测试时使用
     solver(
         DATA_PROCESS_METHOD='pca',
-        CLUSTER_METHOD='kmeans',
+        CLUSTER_METHOD='spectral',
         SAMPLE_GENERATE_METHOD='Stratified',
         GRAPH_METHOD='3d',
         IS=IS_init,
@@ -684,7 +684,7 @@ if __name__ == "__main__":
         Graphs_cluster_save_directory='./Graphs',
         Input_file='data/raw_data.xlsx',
         Output_file='result.xlsx',
-        gurobi_opt=124324070.73713778,
+        gurobi_opt=60704072.122205056,
         Raw_data_flag=True,
         log_filename='app.log',
         max_attempts=2, 

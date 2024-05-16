@@ -55,7 +55,7 @@ export default defineComponent({
                     num_scenarios: numScenarios.value,
                     realistic: realistic.value,
                 });
-                ElMessage.success('生成场景数据成功！');
+                ElMessage.success('生成情景数据成功！');
                 console.log(response.data);
             } catch (error) {
                 console.error(error);

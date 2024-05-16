@@ -399,57 +399,121 @@ def generate_script_name(data_preprocess_methods, cluster_methods, sample_method
         script_name = f"{cluster_methods}_{sample_methods}"
     return script_name
 
-def append_df_to_excel(filename, df, sheet_name='result', startrow=None ,index=False ,header=False , **to_excel_kwargs):
+# def append_df_to_excel(filename, df, sheet_name='result', startrow=None ,index=False ,header=False , **to_excel_kwargs):
+#     from openpyxl import load_workbook
+#     from openpyxl import Workbook
+#     from openpyxl.utils.dataframe import dataframe_to_rows
+#     """
+#     将DataFrame [df] 追加到已存在的Excel文件 [filename] 的 [sheet_name] 工作表中。
+#     如果 [filename] 不存在，此函数将创建它。
+
+#     参数:
+#       filename : 文件路径或已存在的Excel文件
+#                  (示例: '/path/to/file.xlsx')
+#       df : 需要保存到工作簿的dataframe
+#       sheet_name : 将包含DataFrame数据的工作表名称。
+#                    (默认: 'Sheet1')
+#       startrow : 左上角单元格行开始存放数据框架的位置。
+#                  默认情况下 (startrow=None) 计算现有DF的最后一行
+#                  并写入到下一行...
+#       to_excel_kwargs : 将传递给 `DataFrame.to_excel()` 的参数
+#                         [可以是一个字典]
+
+#     返回: 无
+
+#     示例:
+#     append_df_to_excel('output.xlsx', df)
+#     """
+
+#     # Load existing workbook or create a new one
+#     try:
+#         wb = load_workbook(filename)
+#     except FileNotFoundError:
+#         wb = Workbook()
+#         wb.save(filename)
+
+#     # Check if sheet exists, if not create it
+#     if sheet_name not in wb.sheetnames:
+#         wb.create_sheet(sheet_name)
+
+#     # Get the active sheet
+#     sheet = wb[sheet_name]
+
+#     # Calculate starting row
+#     if startrow is None:
+#         startrow = sheet.max_row if sheet.max_row > 0 else 1
+
+#     # Convert the DataFrame to rows
+#     # rows = list(dataframe_to_rows(df, header=True))
+#     rows = list(dataframe_to_rows(df, index=index, header=header))
+
+#     # Write DataFrame rows to Excel sheet
+#     for row in rows:
+#         sheet.append(row)
+
+#     # Save the workbook
+#     wb.save(filename)
+
+def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None, startcol=None, index=False, header=False, **to_excel_kwargs):
     from openpyxl import load_workbook
     from openpyxl import Workbook
     from openpyxl.utils.dataframe import dataframe_to_rows
     """
-    将DataFrame [df] 追加到已存在的Excel文件 [filename] 的 [sheet_name] 工作表中。
-    如果 [filename] 不存在，此函数将创建它。
+    Append a DataFrame [df] to an existing Excel file [filename]
+    into [sheet_name] Sheet.
+    If [filename] doesn't exist, then this function will create it.
 
-    参数:
-      filename : 文件路径或已存在的Excel文件
-                 (示例: '/path/to/file.xlsx')
-      df : 需要保存到工作簿的dataframe
-      sheet_name : 将包含DataFrame数据的工作表名称。
-                   (默认: 'Sheet1')
-      startrow : 左上角单元格行开始存放数据框架的位置。
-                 默认情况下 (startrow=None) 计算现有DF的最后一行
-                 并写入到下一行...
-      to_excel_kwargs : 将传递给 `DataFrame.to_excel()` 的参数
-                        [可以是一个字典]
+    Parameters:
+      filename : File path or existing Excel file
+                 (Example: '/path/to/file.xlsx')
+      df : dataframe to save to workbook
+      sheet_name : Name of sheet which will contain DataFrame.
+                   (default: 'Sheet1')
+      startrow : upper left cell row to dump data frame.
+                 Per default (startrow=None) calculate the last row
+                 in the existing DF and write to the next row...
+      startcol : upper left cell column to dump data frame.
+                 Per default (startcol=None) append to the first column.
+      to_excel_kwargs : arguments which will be passed to `DataFrame.to_excel()`
+                        [can be a dictionary]
 
-    返回: 无
+    Returns: None
 
-    示例:
+    (Example)
     append_df_to_excel('output.xlsx', df)
     """
-
     # Load existing workbook or create a new one
     try:
         wb = load_workbook(filename)
     except FileNotFoundError:
         wb = Workbook()
         wb.save(filename)
+        wb = load_workbook(filename)
 
     # Check if sheet exists, if not create it
     if sheet_name not in wb.sheetnames:
         wb.create_sheet(sheet_name)
 
-    # Get the active sheet
+    # Get the desired sheet
     sheet = wb[sheet_name]
 
-    # Calculate starting row
+    # Calculate starting row and column
     if startrow is None:
         startrow = sheet.max_row if sheet.max_row > 0 else 1
 
-    # Convert the DataFrame to rows
-    # rows = list(dataframe_to_rows(df, header=True))
-    rows = list(dataframe_to_rows(df, index=index, header=header))
-
-    # Write DataFrame rows to Excel sheet
-    for row in rows:
-        sheet.append(row)
+    # If startcol is not specified, use the default behavior
+    if startcol is None:
+        # Convert the DataFrame to rows and append them directly
+        rows = list(dataframe_to_rows(df, index=index, header=header))
+        for row in rows:
+            sheet.append(row)
+    else:
+        # Convert the DataFrame to rows
+        rows = list(dataframe_to_rows(df, index=index, header=header))
+        # Iterate over the rows and write them to the sheet at the specified starting row and column
+        for r_idx, row in enumerate(rows, start=startrow):
+            for c_idx, value in enumerate(row, start=startcol):
+                sheet.cell(row=r_idx, column=c_idx, value=value)
 
     # Save the workbook
     wb.save(filename)
@@ -772,11 +836,11 @@ def save_and_print_results(script_name, Output_file, Vx, Vy, IS, NS, MS, SS_SAA,
 
     # Calculate next start column for location data
     location_startcol = detail_df.shape[1] + 2  # Assuming 2 column gap for readability
-    append_df_to_excel(Output_file, location_df, sheet_name=details_sheet_name, index=True, header=False, startrow=start_row, startcol=location_startcol)
+    append_df_to_excel(Output_file, location_df, sheet_name=details_sheet_name, index=True, header=False, startrow=start_row)
 
     # Calculate next start column for inventory data
     inventory_startcol = location_startcol + location_df.shape[1] + 2  # Assuming 2 column gap for readability
-    append_df_to_excel(Output_file, inventory_df, sheet_name=details_sheet_name, index=True, header=False, startrow=start_row, startcol=inventory_startcol)
+    append_df_to_excel(Output_file, inventory_df, sheet_name=details_sheet_name, index=True, header=False, startrow=start_row)
 
     # # Calculate start row for elapsed time data
     # elapsed_time_startrow = start_row + max(detail_df.shape[0], inventory_df.shape[0], location_df.shape[0]) + 2  # Assuming 2 row gap for readability

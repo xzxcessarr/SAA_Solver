@@ -8,7 +8,7 @@
           </el-form-item>
         </div>
         <div class="w-1/5 mx-2">
-          <el-form-item label="场景数量:">
+          <el-form-item label="情景数量:">
             <el-input-number v-model="formData.NS" :min="1" placeholder="请输入" />
           </el-form-item>
         </div>
@@ -18,7 +18,7 @@
           </el-form-item>
         </div>
         <div class="w-3/10 mx-2">
-          <el-form-item label="样本场景个数:">
+          <el-form-item label="样本情景个数:">
             <el-input-number v-model="formData.SS_SAA" :min="1" :max="getMaxSS_SAA" placeholder="请输入" />
           </el-form-item>
         </div>
@@ -37,7 +37,7 @@
 
       <div class="flex justify-between mb-2">
         <div class="w-full">
-          <el-form-item label="场景聚类方法:" class="w-full">
+          <el-form-item label="情景聚类方法:" class="w-full">
             <el-select v-model="formData.cluster_methods" multiple placeholder="请选择">
               <el-option v-for="item in cluster_options" :key="item.value" :label="item.label"
                 :value="item.value"></el-option>

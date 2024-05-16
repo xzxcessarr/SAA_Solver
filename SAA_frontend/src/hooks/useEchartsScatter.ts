@@ -38,14 +38,14 @@ export function useECharts(
 
         const option = {
             title: {
-                text: "样本场景分布图",
+                text: "样本情景分布图",
                 subtext: "气泡大小代表需求量",
                 left: "center",
             },
             tooltip: {
                 trigger: "item",
                 formatter: (params) => {
-                    return `城市: ${params.value[0]}<br/>场景: ${params.value[1]}<br/>需求: ${params.value[2]}`;
+                    return `城市: ${params.value[0]}<br/>情景: ${params.value[1]}<br/>需求: ${params.value[2]}`;
                 }
             },
             visualMap: {
@@ -80,10 +80,10 @@ export function useECharts(
             },
             yAxis: {
                 type: 'value',
-                name: '场景',
+                name: '情景',
                 splitLine: { show: false },
                 axisLabel: {
-                    formatter: '场景{value}',
+                    formatter: '情景{value}',
                     show: true,
                     // rotate: 45
                 }

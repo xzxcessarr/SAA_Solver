@@ -10,7 +10,7 @@
             <!-- 步骤导航，更改为水平布局 -->
             <el-steps :active="activeStep" direction="horizontal" class="justify-center">
                 <el-step title="成本数据"></el-step>
-                <el-step title="场景数据"></el-step>
+                <el-step title="情景数据"></el-step>
                 <el-step title="完成"></el-step>
             </el-steps>
             <div class="mt-4 flex justify-center space-x-2">
