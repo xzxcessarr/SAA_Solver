@@ -1,3 +1,17 @@
+<!-- 
+SAA_Solver
+==========
+
+This module is part of the SAA_Solver project and contains the implementation of Data Upload.
+
+Author: cessarr
+Date Created: 2024-05-19
+License: MIT License
+
+Description:
+------------
+此组件用于上传用户的Excel文件，需要参照模板文件编写数据。 
+-->
 <template>
   <div class="mt-5 max-w-6xl mx-auto p-5">
     <div class="border border-gray-200 rounded shadow">

@@ -32,18 +32,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import emitter from '@/utils/emitter';
 import LogsWebSocket from '@/components/LogsWebSocket.vue';
 
 const step = ref(2);
 const showLogs = ref(false);
 const router = useRouter();
 
+
 watch(step, (newValue) => {
   switch (newValue) {
     case 1:
-      
       router.push({ name: 'DataConfig' });
       break;
     case 2:
@@ -53,5 +54,14 @@ watch(step, (newValue) => {
       router.push({ name: 'ResultPage' });
       break;
   }
+});
+
+
+onMounted(() => {
+  // 监听事件发射器的事件
+  emitter.on('goToParameterSetup', () => {
+    step.value = 2;
+    router.push({ name: 'ConfigSolver' });
+  });
 });
 </script>

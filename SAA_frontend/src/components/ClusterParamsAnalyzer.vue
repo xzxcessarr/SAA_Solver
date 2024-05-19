@@ -1,3 +1,17 @@
+<!-- 
+SAA_Solver
+==========
+
+This module is part of the SAA_Solver project and contains the implementation of Parameter Analysis.
+
+Author: cessarr
+Date Created: 2024-05-19
+License: MIT License
+
+Description:
+------------
+此组件用于分析最优参数，后端接口暂未完善，请勿直接调用。 
+-->
 <template>
   <div class="config-form flex flex-col items-center justify-center p-5">
     <!-- <h2 class="text-xl font-bold mb-4">Configuration Parameters</h2> -->

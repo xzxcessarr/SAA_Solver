@@ -1,3 +1,17 @@
+<!-- 
+SAA_Solver
+==========
+
+This module is part of the SAA_Solver project and contains the implementation of Log Monitoring.
+
+Author: cessarr
+Date Created: 2024-05-19
+License: MIT License
+
+Description:
+------------
+此组件用于查看后端实时计算日志。 
+-->
 <template>
   <div class="flex justify-center p-4">
     <el-scrollbar class="h-96 w-full bg-white text-black border border-black overflow-y-auto">

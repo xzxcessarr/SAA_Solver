@@ -1,3 +1,17 @@
+<!-- 
+SAA_Solver
+==========
+
+This module is part of the SAA_Solver project and contains the implementation of Echarts.
+
+Author: cessarr
+Date Created: 2024-05-19
+License: MIT License
+
+Description:
+------------
+此组件用于在Vue3框架下实现结果图表的显示和数据的动态更新。 
+-->
 <template>
   <div class="flex justify-center w-full">
     <div class="w-full lg:max-w-6xl mx-auto p-2">

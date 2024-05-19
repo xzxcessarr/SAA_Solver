@@ -1,68 +1,17 @@
-<!-- <template>
-  <div>
-    <el-row justify="space-evenly">
-      <div class="flex flex-nowrap overflow-x-auto space-x-2.5 py-2.5">
-        <photo-provider>
-          <photo-consumer v-for="src in clusterImages" :key="src" :src="src">
-            <img :src="src" class="w-48 h-auto cursor-pointer object-cover flex-shrink-0 shadow-lg">
-          </photo-consumer>
-        </photo-provider>
-      </div>
-    </el-row>
-    <el-row justify="space-evenly">
-      <div class="flex flex-nowrap overflow-x-auto space-x-2.5 py-2.5">
-        <photo-provider>
-          <photo-consumer v-for="src in sampleImages" :key="src" :src="src">
-            <img :src="src" class="w-48 h-auto cursor-pointer object-cover flex-shrink-0 shadow-lg">
-          </photo-consumer>
-        </photo-provider>
-      </div>
-    </el-row>
-  </div>
-</template>
+<!-- 
+SAA_Solver
+==========
 
+This module is part of the SAA_Solver project and contains the implementation of Cluster and Sample View.
 
-<script lang="ts">
-import { defineComponent, onMounted, ref, type Ref, watch } from 'vue';
-import axios from 'axios';
+Author: cessarr
+Date Created: 2024-05-19
+License: MIT License
 
-export default defineComponent({
-  name: 'ViewerComponent',
-  props: {
-    dirName: {
-      type: String,
-      default: 'Default',
-    },
-  },
-  setup(props) {
-    const sampleImages: Ref<string[]> = ref([]);
-    const clusterImages: Ref<string[]> = ref([]);
-
-    // 获取图片列表并更新
-    const fetchImages = async () => {
-      try {
-        const sampleResponse = await axios.get(`/api/get_sample_images?dir_name=${props.dirName}`);
-        sampleImages.value = sampleResponse.data.sample_images;
-
-        const clusterResponse = await axios.get(`/api/get_cluster_images?dir_name=${props.dirName}`);
-        clusterImages.value = clusterResponse.data.cluster_images;
-        console.log(sampleImages.value)
-      } catch (error) {
-        console.error('An error occurred while fetching images:', error);
-      }
-    };  
-
-    // 每当 dirName 更改时，重新获取图像列表
-    watch(() => props.dirName, fetchImages, { immediate: true });
-
-    return {
-      sampleImages,
-      clusterImages,
-      fetchImages,
-    };
-  },
-});
-</script> -->
+Description:
+------------
+此组件用于查看抽样和聚类数据点数据。 
+-->
 
 <template>
   <div>

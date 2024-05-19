@@ -1,3 +1,17 @@
+<!-- 
+SAA_Solver
+==========
+
+This module is part of the SAA_Solver project and contains the implementation of Data Generate.
+
+Author: cessarr
+Date Created: 2024-05-19
+License: MIT License
+
+Description:
+------------
+此组件用于设置相关场景参数。 
+-->
 <template>
 
     <div class="flex w-96">

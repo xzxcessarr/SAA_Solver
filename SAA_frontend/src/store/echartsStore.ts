@@ -1,4 +1,3 @@
-// stores/echartsStore.js
 import { defineStore } from 'pinia';
 
 export const useEchartsStore = defineStore('echarts', {

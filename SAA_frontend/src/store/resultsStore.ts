@@ -1,4 +1,3 @@
-// stores/resultsStore.ts
 import { defineStore } from 'pinia';
 
 interface Result {

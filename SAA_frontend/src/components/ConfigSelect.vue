@@ -1,3 +1,17 @@
+<!-- 
+SAA_Solver
+==========
+
+This module is part of the SAA_Solver project and contains the implementation of Select and Solve Problem.
+
+Author: cessarr
+Date Created: 2024-05-19
+License: MIT License
+
+Description:
+------------
+此组件用于设置参数调用求解算例。 
+-->
 <template>
   <div class="form-container">
     <el-form :model="formData" class="mx-auto max-w-6xl">

@@ -1,3 +1,17 @@
+<!-- 
+SAA_Solver
+==========
+
+This module is part of the SAA_Solver project and contains the implementation of Echarts.
+
+Author: cessarr
+Date Created: 2024-05-19
+License: MIT License
+
+Description:
+------------
+此组件用于在Vue3框架下实现散点图表的显示和数据的动态更新。 
+-->
 <template>
   <div class="w-screen"> <!-- 确保父容器有足够的宽度 -->
       <div class="w-full h-[400px] border-2 border-gray-800 shadow-lg p-2.5 bg-white">
