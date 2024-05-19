@@ -1,6 +1,6 @@
 # SAA-Solver求解器
 
-英文说明请[点击这里](https://gitee.com/cessarr/SAA_Solver/blob/master/README.en.md)
+English version please [click here](https://github.com/xzxcessarr/SAA_Solver/blob/main/README.en.md)
 
 本代码遵循MIT协议开源，主要参考下面两篇论文实现：
 
