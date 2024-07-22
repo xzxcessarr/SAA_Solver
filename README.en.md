@@ -1,6 +1,10 @@
 1. # SAA-Solver
 
-   This code is open-sourced under the MIT license and is mainly implemented with reference to the following two papers:
+   This code is open-sourced under the MIT license 
+
+   Please refer to it rationally: the code needs improvement and correction.
+
+   And is mainly implemented with reference to the following two papers:
 
    [1] Shaolong Hu, Zhijie Sasha Dong, Rui Dai. A machine learning based sample average approximation for supplier selection with option contract in humanitarian relief. Transportation Research Part E: Logistics and Transportation Review. 2024, Volume 186: 103531.
 
